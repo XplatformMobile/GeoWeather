@@ -2,6 +2,8 @@
 Resources
 build.log
 build
+i18n
+platform
 npm-debug.log
 tmp
 .map
