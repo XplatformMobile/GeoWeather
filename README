@@ -3,16 +3,17 @@ Welcome to your Appcelerator Titanium Mobile Project
 This is a blank project.  Start by editing your application's app.js to 
 make your first mobile project using Titanium.
 
-
-
 ----------------------------------
 Stuff our legal folk make us say:
 
 Appcelerator, Appcelerator Titanium and associated marks and logos are 
 trademarks of Appcelerator, Inc. 
 
-Titanium is Copyright (c) 2008-2013 by Appcelerator, Inc. All Rights Reserved.
+Titanium is Copyright (c) 2008-2015 by Appcelerator, Inc. All Rights Reserved.
 
 Titanium is licensed under the Apache Public License (Version 2). Please
 see the LICENSE file for the full license.
 
+This application is a mashup of two other Titanium demos: GeoCoder and
+RSS Reader.  This app uses Web Services (a la RSS Reader) to get weather
+data and display an annotation associated with a pushpin on a Google Map.
