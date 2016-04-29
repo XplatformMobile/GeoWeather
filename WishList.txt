@@ -1,0 +1,8 @@
+Wish List for GeoWeather mobile app
+===================================
+
+1)	Add a button or icon in the annotation (balloon that pops up when a pushpin is touched) that, when pressed,
+	brings up a WebView with the Weather.com weather page for the location (current conditions and a forecast)
+	[Status: Comments in geo.js (lines 145 to 150) show how it can be done using RESTful web service calls]
+	
+2)	<Add your wish item here>
