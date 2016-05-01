@@ -121,6 +121,7 @@ exports.addAnnotation = function(geodata, weather) {
 	});
 };
 
+
 /*
 exports.addAnnotation = function(geodata) {
 	var annotation = Alloy.createController('annotation', {
