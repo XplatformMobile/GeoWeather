@@ -23,6 +23,49 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
+
+//
+// Open a browser window if you tap on the right
+//
+
+$.map.addEventListener('click', function(e) {
+	// debug::: alert(e.clicksource);
+	// debug::: alert(e.annotation);
+	
+	
+	// if we are in an annotation and either title, infoWindow or subtitle was clicked
+	// launch or web window
+	
+	if (e.annotation &&   (e.clicksource == 'title') || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
+		
+		var win = Ti.UI.createWindow();
+	
+		// access previously set globals.
+			
+	    var longitude = Ti.App.currentLon;
+	    var latitude = Ti.App.currentLat;
+	    
+		
+		var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
+		
+		var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
+		
+		// debug:::: alert (weathergovURL);
+		
+		
+				
+		var webview = Ti.UI.createWebView({
+		url: weathergovURL });
+			win.add(webview);
+		
+		win.open();
+	    win.add(webview);
+	 
+	}
+});
+
+
+
 // function that adds new pushpin to the map from a longpress on the map location
 $.map.addEventListener("longpress", function(e) {
 	if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
@@ -62,6 +105,14 @@ exports.addAnnotation = function(geodata, weather) {
 		rightButton : image_icon
 	});
 	$.map.addAnnotation(annotation.getView());
+	
+	// pinnowjs: set a global for the coordinates
+	//
+	
+	Ti.App.currentLat = geodata.coords.latitude;
+	Ti.App.currentLon = geodata.coords.longitude;
+	
+	
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
