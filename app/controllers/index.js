@@ -11,7 +11,11 @@
 
  Additional information is in the documentation:
  http://docs.appcelerator.com/titanium/latest/#!/guide/Google_Maps_v2_for_Android
+ 
+
  */
+
+
 var MapModule = require('ti.map');
 if (Ti.Platform.osname === 'android') {//check if the google services are available and up to date, otherwise App will crash on Android
 	var code = MapModule.isGooglePlayServicesAvailable();
@@ -32,9 +36,12 @@ if (Ti.Platform.osname === 'android') {//check if the google services are availa
 	startApp();
 }
 
+
+
 function startApp() {
 	$.addAddress.on('addAnnotation', function(e) {
 		$.map.addAnnotation(e.geodata, e.weather);
 	});
+	
 	$.index.open();
 }

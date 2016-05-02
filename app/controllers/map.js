@@ -15,6 +15,8 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	};
 };
 
+
+
 // registers a callback fn. that removes the annotation when user closes the annotation or
 // clicks the map outside the annotation
 $.map.addEventListener('click', function(e) {
@@ -27,23 +29,28 @@ $.map.addEventListener('click', function(e) {
 //
 // Open a browser window if you tap on the right
 //
-
 $.map.addEventListener('click', function(e) {
 	// debug::: alert(e.clicksource);
 	// debug::: alert(e.annotation);
-	
-	
+		
 	// if we are in an annotation and either title, infoWindow or subtitle was clicked
 	// launch or web window
-	
 	if (e.annotation &&   (e.clicksource == 'title') || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
+		
+		// should try {height} etc
+		
 		
 		var win = Ti.UI.createWindow();
 	
 		// access previously set globals.
 			
-	    var longitude = Ti.App.currentLon;
-	    var latitude = Ti.App.currentLat;
+		
+	    // var longitude = Ti.App.currentLon;
+	    // var latitude = Ti.App.currentLat;
+	    
+	    var longitude = e.annotation.getLongitude();
+	    var latitude = e.annotation.getLatitude();
+	    
 	    
 		
 		var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
@@ -63,7 +70,6 @@ $.map.addEventListener('click', function(e) {
 	 
 	}
 });
-
 
 
 // function that adds new pushpin to the map from a longpress on the map location
@@ -107,10 +113,9 @@ exports.addAnnotation = function(geodata, weather) {
 	$.map.addAnnotation(annotation.getView());
 	
 	// pinnowjs: set a global for the coordinates
-	//
-	
-	Ti.App.currentLat = geodata.coords.latitude;
-	Ti.App.currentLon = geodata.coords.longitude;
+	// Turns out I don't need globals. 
+	// Ti.App.currentLat = geodata.coords.latitude;
+	// Ti.App.currentLon = geodata.coords.longitude;
 	
 	
 	$.map.setLocation({
