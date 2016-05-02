@@ -7,4 +7,8 @@ Wish List for GeoWeather app
 	[Status: Comments in geo.js (lines 145 to 150) show how this can be done using RESTful web service calls]
 	pinnowjs: Haven't found nice RESTful  intereface, but established a webview can be loaded, using weather.gov until thats figured out.
 	
-2)	<Add your wish item here>
+2)	Correct app errors in Mobile Web Preview in browser.
+
+3) "longpress" (event is handled in map.js) don't bring up new pushpin.
+    (workers: Brett)
+    [Status: ]
