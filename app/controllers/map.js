@@ -30,12 +30,14 @@ $.map.addEventListener('click', function(e) {
 // Open a browser window if you tap on the right
 //
 $.map.addEventListener('click', function(e) {
-	// debug::: alert(e.clicksource);
+	// alert(e.clicksource);
 	// debug::: alert(e.annotation);
 		
 	// if we are in an annotation and either title, infoWindow or subtitle was clicked
 	// launch or web window
-	if (e.annotation &&   (e.clicksource == 'title') || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
+	
+	// Ios, needs rightButton event 
+	if (e.annotation &&   (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' ) || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
 		
 		// should try {height} etc
 		
