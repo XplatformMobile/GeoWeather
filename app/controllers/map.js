@@ -53,8 +53,7 @@ $.map.addEventListener('click', function(e) {
 	    var longitude = e.annotation.getLongitude();
 	    var latitude = e.annotation.getLatitude();
 	    
-	    
-		
+	   		
 		var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
 		
 		var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
