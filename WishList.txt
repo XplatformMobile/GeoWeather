@@ -3,7 +3,12 @@ Wish List for GeoWeather app
 
 1)	Add a button or icon in the annotation (balloon that pops up when a pushpin is touched) that, when pressed,
 	brings up a WebView with the Weather.com weather page for the location (current conditions and a forecast)
-	(Workers: JJB)
-	[Status: Comments in geo.js (lines 145 to 150) show how this can be done using RESTful web service calls]
+	(Workers: JJB, John)
+	[Status: JJB comments in geo.js (lines 145 to 150) show how this can be done using RESTful web service calls,
+			 John has any touch of annotation brings up the MSOE home page in a web view.]
 	
-2)	<Add your wish item here>
+2)	App errors in Mobile Web Preview in Browser.
+
+3)	"longpress" (event is handled in map.js) doesn't bring up a new pushpin.
+	(Workers: Brett)
+	[Status: ]
