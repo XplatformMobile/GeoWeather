@@ -32,40 +32,21 @@ $.map.addEventListener('click', function(e) {
 
 	// if we are in an annotation and either title, infoWindow or subtitle was clicked
 	// launch or web window
-<<<<<<< HEAD
 	
 	// Ios, needs rightButton event 
 	if (e.annotation &&   (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' ) || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
 		
 		// should try {height} etc
 		
-		
-=======
-	if (e.annotation && (e.clicksource == 'title') || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle')) { // should try {height} etc
-
->>>>>>> 686aaa7bbd034d2444f613ebe699ecdfc7b04155
 		var webwin = Ti.UI.createWindow();
 
-		// access previously set globals.
-<<<<<<< HEAD
-			
-		
+		// access previously set globals.		
 	    // var longitude = Ti.App.currentLon;
 	    // var latitude = Ti.App.currentLat;
 	    
 	    var longitude = e.annotation.getLongitude();
-	    var latitude = e.annotation.getLatitude();
-	    
-	   		
-=======
+	    var latitude = e.annotation.getLatitude();	   		
 
-		// var longitude = Ti.App.currentLon;
-		// var latitude = Ti.App.currentLat;
-
-		var longitude = e.annotation.getLongitude();
-		var latitude = e.annotation.getLatitude();
-
->>>>>>> 686aaa7bbd034d2444f613ebe699ecdfc7b04155
 		var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
 
 		var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
