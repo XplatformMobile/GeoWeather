@@ -1,7 +1,7 @@
 var geo = require('geo');
 
-Alloy.Globals.LATITUDE_BASE = 37.389569;
-Alloy.Globals.LONGITUDE_BASE = -122.050212;
+Alloy.Globals.LATITUDE_BASE = 43.039918;
+Alloy.Globals.LONGITUDE_BASE = -87.989755;
 
 if (OS_IOS || OS_ANDROID) {
 	Alloy.Globals.Map = Ti.Map = require('ti.map');

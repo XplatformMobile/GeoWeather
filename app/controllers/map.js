@@ -73,22 +73,34 @@ $.map.addEventListener('click', function(e) {
 
 
 // function that adds new pushpin to the map from a longpress on the map location
+// longpress is broke without some kind of container/overlay
+// longclick doesn't return any event information 
+// considering alternatives
+// Looks like there is a container, but how to intercept the events.
+
+
 $.map.addEventListener("longpress", function(e) {
 	if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
 		$.map.removeAnnotation(e.annotation);
 	}
+	
+	alert (e.x);
+	alert (e.y);
+	
+   	var coordinate = calculateLatLngfromPixels($.map, e.x, e.y);
 
-	var coordinate = calculateLatLngfromPixels($.map, e.x, e.y);
-	var longitude = coordinate.lon;
+	var longitude = coordinate.lon;	
 	var latitude = coordinate.lat;
 
 	var coords = coordinate.lat + " " + coordinate.lon;
+	alert(coords)
 	geo.forwardGeocode(coords, function(geodata, weather) {
 		// send request to geo library with coordinates to get location info and weather
 		exports.addAnnotation(geodata, weather);
 		// the function call above shows the pushpin on the map
 	});
 });
+
 
 // called when a new pushpin is added to the map
 exports.addAnnotation = function(geodata, weather) {
