@@ -40,7 +40,7 @@ $.map.addEventListener('click', function(e) {
 		// should try {height} etc
 		
 		
-		var win = Ti.UI.createWindow();
+		var webwin = Ti.UI.createWindow();
 	
 		// access previously set globals.
 			
@@ -63,11 +63,19 @@ $.map.addEventListener('click', function(e) {
 				
 		var webview = Ti.UI.createWebView({
 		url: weathergovURL });
-			win.add(webview);
+			webwin.add(webview);
 		
-		win.open();
-	    win.add(webview);
-	 
+		webwin.open();
+	    webwin.add(webview);
+	    
+	    // added a close button
+	    
+        var closeWebView = Ti.UI.createButton({title: 'close',left:5,bottom:10});
+        webwin.add(closeWebView);
+        
+        closeWebView.addEventListener('click', function () { webwin.close(); });
+        
+         	 
 	}
 });
 
@@ -93,7 +101,7 @@ $.map.addEventListener("longpress", function(e) {
 	var latitude = coordinate.lat;
 
 	var coords = coordinate.lat + " " + coordinate.lon;
-	alert(coords)
+	
 	geo.forwardGeocode(coords, function(geodata, weather) {
 		// send request to geo library with coordinates to get location info and weather
 		exports.addAnnotation(geodata, weather);
