@@ -23,16 +23,18 @@ var GeoData = function(title, latitude, longitude, zip) {
 };
 
 /**
- * !!!!!!!DEPRECATED!!!!!!!!
+ * !!!!!!!DEPRECATED!!!!!!!! - We now use the buildWeatherRequestByCoords() fn.
  * Delays the callback function, creates a weather JS Object that contains all relevant information about current information.
- * @param {Object} zip
- * @param {Object} callback
+ * @param {Object} zip - the U.S. zip code or postal code
+ * @param {Object} callback	- a fn. argument that is called when WeatherInfo is populated from the response
  * @param {Object} iteration - set always to 0. Internal handling.
  */
 var buildWeatherRequestByZip = function(zip, callback, iteration) {
 	var uac = IDs[iteration];
+	// Query Example:
+	// http://www.myweather2.com/developer/forecast.ashx?uac=uIOWy9SFuf&output=json&query=53151&temp_unit=f&ws_unit=mph
 	var request = "http://www.myweather2.com/developer/forecast.ashx?uac=" + uac + "&output=json&query=" + zip + "&temp_unit=f&ws_unit=mph";
-	// JSON EXAMPLE:
+	// JSON Response example:
 	//{ "weather": { "curren_weather": [ {"humidity": "58", "pressure": "1032", "temp": "11", "temp_unit": "c", "weather_code": "1", "weather_text": "Partly cloudy",  "wind": [ {"dir": "E", "speed": "3", "wind_unit": "kph" } ] } ],  "forecast": [ {"date": "2015-04-20",  "day": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "73", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "17",  "night": [ {"weather_code": "0", "weather_text": "Clear skies",  "wind": [ {"dir": "ENE", "dir_degree": "68", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "4", "temp_unit": "c" }, {"date": "2015-04-21",  "day": [ {"weather_code": "2", "weather_text": "Cloudy skies",  "wind": [ {"dir": "ENE", "dir_degree": "57", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "16",  "night": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "66", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "5", "temp_unit": "c" } ] }}
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.open('GET', request);
@@ -63,15 +65,17 @@ var buildWeatherRequestByZip = function(zip, callback, iteration) {
 
 /**
  * Delays the callback function, creates a weather JS Object that contains all relevant information about current information.
- * @param {Object} lattitude
- * @param {Object} longitude
- * @param {Object} callback
+ * @param {Object} lattitude \
+ * @param {Object} longitude / Replaced zip by GPS coordinates (latitude, longitude)
+ * @param {Object} callback - a fn. argument that is called when WeatherInfo is populated from the response
  * @param {Object} iteration - set always to 0. Internal handling.
  */
 var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 	var uac = IDs[iteration];
+	// Query Example:
+	// http://www.myweather2.com/developer/forecast.ashx?uac=uIOWy9SFuf&output=json&query=43.0,-88.0&temp_unit=f&ws_unit=mph
 	var request = "http://www.myweather2.com/developer/forecast.ashx?uac=" + uac + "&output=json&query=" + lat + "," + lon + "&temp_unit=f&ws_unit=mph";
-	// JSON EXAMPLE:
+	// JSON Response example:
 	//{ "weather": { "curren_weather": [ {"humidity": "58", "pressure": "1032", "temp": "11", "temp_unit": "c", "weather_code": "1", "weather_text": "Partly cloudy",  "wind": [ {"dir": "E", "speed": "3", "wind_unit": "kph" } ] } ],  "forecast": [ {"date": "2015-04-20",  "day": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "73", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "17",  "night": [ {"weather_code": "0", "weather_text": "Clear skies",  "wind": [ {"dir": "ENE", "dir_degree": "68", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "4", "temp_unit": "c" }, {"date": "2015-04-21",  "day": [ {"weather_code": "2", "weather_text": "Cloudy skies",  "wind": [ {"dir": "ENE", "dir_degree": "57", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "16",  "night": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "66", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "5", "temp_unit": "c" } ] }}
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.open('GET', request);
@@ -138,8 +142,9 @@ var forwardGeocodeNative = function(address, callback) {
 		address = json.results[0].formatted_address;
 		var lat = json.results[0].geometry.location.lat;
 		var lon = json.results[0].geometry.location.lng;
-		// Fetch location name f.e. Los Angeles
-		// Think about using http://wxdata.weather.com/wxdata/search/search?where=Los%20Angeles, parsing out the ID field and adding it to http://www.weather.com/weather/today/l/USCA0638
+		// Fetch location name f.e. Los Angeles (which has city ID USCA0638)
+		// Think about querying http://wxdata.weather.com/wxdata/search/search?where=Los%20Angeles,
+		// parsing out the ID field and fetching http://www.weather.com/weather/today/l/USCA0638 in a WebView
 		GeoInfo = new GeoData(address, lat, lon, zipcode);
 		// if the new weather location is near the last one, ignore it and send back old WeatherInfo
 		if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {

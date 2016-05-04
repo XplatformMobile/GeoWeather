@@ -23,17 +23,81 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
+//
+// Open a browser window if you tap on the right
+//
+$.map.addEventListener('click', function(e) {
+	// alert(e.clicksource);
+	// debug::: alert(e.annotation);
+
+	// if we are in an annotation and either title, infoWindow or subtitle was clicked
+	// launch or web window
+	
+	// Ios, needs rightButton event 
+	if (e.annotation &&   (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' ) || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
+		
+		// should try {height} etc
+		
+		var webwin = Ti.UI.createWindow();
+
+		// access previously set globals.		
+	    // var longitude = Ti.App.currentLon;
+	    // var latitude = Ti.App.currentLat;
+	    
+	    var longitude = e.annotation.getLongitude();
+	    var latitude = e.annotation.getLatitude();	   		
+
+		var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
+
+		var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
+
+		// debug:::: alert (weathergovURL);
+
+		var webview = Ti.UI.createWebView({
+			url : weathergovURL
+		});
+		webwin.add(webview);
+
+		webwin.open();
+		webwin.add(webview);
+
+		// added a close button
+
+		var closeWebView = Ti.UI.createButton({
+			title : 'close',
+			left : 5,
+			bottom : 10
+		});
+		webwin.add(closeWebView);
+
+		closeWebView.addEventListener('click', function() {
+			webwin.close();
+		});
+
+	}
+});
+
 // function that adds new pushpin to the map from a longpress on the map location
+// longpress is broke without some kind of container/overlay
+// longclick doesn't return any event information
+// considering alternatives
+// Looks like there is a container, but how to intercept the events.
+
 $.map.addEventListener("longpress", function(e) {
 	if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
 		$.map.removeAnnotation(e.annotation);
 	}
 
+	alert(e.x);
+	alert(e.y);
+
 	var coordinate = calculateLatLngfromPixels($.map, e.x, e.y);
+
 	var longitude = coordinate.lon;
 	var latitude = coordinate.lat;
 
 	var coords = coordinate.lat + " " + coordinate.lon;
+
 	geo.forwardGeocode(coords, function(geodata, weather) {
 		// send request to geo library with coordinates to get location info and weather
 		exports.addAnnotation(geodata, weather);
@@ -62,6 +126,12 @@ exports.addAnnotation = function(geodata, weather) {
 		rightButton : image_icon
 	});
 	$.map.addAnnotation(annotation.getView());
+
+	// pinnowjs: set a global for the coordinates
+	// Turns out I don't need globals.
+	// Ti.App.currentLat = geodata.coords.latitude;
+	// Ti.App.currentLon = geodata.coords.longitude;
+
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
@@ -72,20 +142,20 @@ exports.addAnnotation = function(geodata, weather) {
 
 /*
 exports.addAnnotation = function(geodata) {
-	var annotation = Alloy.createController('annotation', {
-		title : geodata.title,
-		subtitle : geodata.zip,
-		latitude : geodata.coords.latitude,
-		longitude : geodata.coords.longitude
-	});
-	$.map.addAnnotation(annotation.getView());
-	$.map.setLocation({
-		latitude : geodata.coords.latitude,
-		longitude : geodata.coords.longitude,
-		latitudeDelta : 1,
-		longitudeDelta : 1
-	});
-}; 
+var annotation = Alloy.createController('annotation', {
+title : geodata.title,
+subtitle : geodata.zip,
+latitude : geodata.coords.latitude,
+longitude : geodata.coords.longitude
+});
+$.map.addAnnotation(annotation.getView());
+$.map.setLocation({
+latitude : geodata.coords.latitude,
+longitude : geodata.coords.longitude,
+latitudeDelta : 1,
+longitudeDelta : 1
+});
+};
 */
 
 /**Method that will get the weather information and the day Icon. If possible, see if it is day or night as the icon can
