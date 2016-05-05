@@ -1,6 +1,6 @@
 /*
- To run this demo app on Android, you must obtain a Google Maps API v2 key
- from the Google API console and update your tiapp.xml file.
+ To run this demo app on Android/iOS, you must obtain a Google Maps API v2 key
+ from a Google API console project online and update your tiapp.xml file.
  - keys are associated with your Google developer account and the app's app ID
  - you might need to change the app ID assigned by default to this demo app
 
@@ -11,13 +11,12 @@
 
  Additional information is in the documentation:
  http://docs.appcelerator.com/titanium/latest/#!/guide/Google_Maps_v2_for_Android
- 
-
  */
 
-
 var MapModule = require('ti.map');
-if (Ti.Platform.osname === 'android') {//check if the google services are available and up to date, otherwise App will crash on Android
+if (Ti.Platform.osname === 'android')
+{	// Check if the Google Play services are available and up to date,
+	// otherwise App will crash on Android for sure.
 	var code = MapModule.isGooglePlayServicesAvailable();
 	if (code == MapModule.SUCCESS) {
 		alert("Google Play Service is installed");
@@ -36,12 +35,14 @@ if (Ti.Platform.osname === 'android') {//check if the google services are availa
 	startApp();
 }
 
-
-
+// Register a function (that's called on an addAnnotation event)
+// that will call the addAnnotation fn on the map object. The event
+// object will hold the properties e.geodata and e.weather that are
+// populated with location and weather info.
 function startApp() {
 	$.addAddress.on('addAnnotation', function(e) {
 		$.map.addAnnotation(e.geodata, e.weather);
 	});
 	
-	$.index.open();
+	$.index.open();	// opens the top-level app window (see index.xml for more)
 }
