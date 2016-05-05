@@ -110,9 +110,9 @@ exports.forwardGeocode = function(address, callback) {
 };
 
 /**
- * No longer callbacks itself, instead creates the address and delegates the callback to the getWeather method
- * @param {Object} address
- * @param {Object} callback
+ * No longer callbacks itself, instead creates the address and delegates the callback to the buildWeatherRequestBy<x> method
+ * @param {Object} address - the user-requested address to geolocate via the Google Maps API
+ * @param {Object} callback - a fn. argument that is passed to buildWeatherRequestBy<x> when GeoInfo is populated from the response
  */
 var forwardGeocodeNative = function(address, callback) {
 	//alert("\"" + address + "\"");

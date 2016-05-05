@@ -23,7 +23,7 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
-// Open a browser window if you tap on the right-side icon
+// Open a browser window if you tap on the right (of what? -JJB)
 $.map.addEventListener('click', function(e) {
 	// alert(e.clicksource);
 	// debug::: alert(e.annotation);
@@ -32,7 +32,8 @@ $.map.addEventListener('click', function(e) {
 	// launch or web window
 	
 	// iOS, needs rightButton event 
-	if (e.annotation &&   (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' ) || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
+	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
+		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
 		// should try {height} etc
 		var webwin = Ti.UI.createWindow();
 
@@ -151,11 +152,10 @@ exports.addAnnotation = function(geodata) {
 		longitudeDelta : 1
 	});
 }; 
-
 */
 
 /**Method that will get the weather information and the day Icon. If possible, see if it is day or night as the icon can
- be chosen by the field[3](day) or field[4](night). In this project it was not possible, so the day icon was chosen.
+ be chosen by the field[3](day) or field[4](night). The night icon didn't look very useful, so the day icon was chosen.
 
  @return: JSON with weather_text and the image_icon's path. In case the weather_code is invalid or the method
  for some reason could not create the JSON, a JSON with weather_text and image_icon with values "N/A" is returned.
