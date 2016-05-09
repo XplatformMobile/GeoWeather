@@ -10,9 +10,11 @@ var GeoInfo = null;
  * 1 degree is approximately 69 miles length, longitude vary, but is pretty much same at equator. Margin of 0.1 should make the difference at approximately 7 miles.
  */
 var margin = 0.1;
+// Appcelerator HQ
 var prevLat = 37.389569;
 var prevLon = -122.050212;
 
+// populates json data object
 var GeoData = function(title, latitude, longitude, zip) {
 	this.title = title;
 	this.coords = {
@@ -38,7 +40,8 @@ var buildWeatherRequestByZip = function(zip, callback, iteration) {
 	//{ "weather": { "curren_weather": [ {"humidity": "58", "pressure": "1032", "temp": "11", "temp_unit": "c", "weather_code": "1", "weather_text": "Partly cloudy",  "wind": [ {"dir": "E", "speed": "3", "wind_unit": "kph" } ] } ],  "forecast": [ {"date": "2015-04-20",  "day": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "73", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "17",  "night": [ {"weather_code": "0", "weather_text": "Clear skies",  "wind": [ {"dir": "ENE", "dir_degree": "68", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "4", "temp_unit": "c" }, {"date": "2015-04-21",  "day": [ {"weather_code": "2", "weather_text": "Cloudy skies",  "wind": [ {"dir": "ENE", "dir_degree": "57", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "16",  "night": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "66", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "5", "temp_unit": "c" } ] }}
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.open('GET', request);
-	var json;	// Holds the data returned from this fn.
+	var json;
+	// Holds the data returned from this fn.
 	// onload is called on a successful AJAX query; 'this' is the response obj.
 	xhr.onload = function() {
 		var text = this.responseText;
@@ -58,7 +61,7 @@ var buildWeatherRequestByZip = function(zip, callback, iteration) {
 	};
 	// Sends the AJAX RESTful web service request
 	xhr.send();
-//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
+	//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
 };
 
 /**
@@ -77,7 +80,8 @@ var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 	//{ "weather": { "curren_weather": [ {"humidity": "58", "pressure": "1032", "temp": "11", "temp_unit": "c", "weather_code": "1", "weather_text": "Partly cloudy",  "wind": [ {"dir": "E", "speed": "3", "wind_unit": "kph" } ] } ],  "forecast": [ {"date": "2015-04-20",  "day": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "73", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "17",  "night": [ {"weather_code": "0", "weather_text": "Clear skies",  "wind": [ {"dir": "ENE", "dir_degree": "68", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "4", "temp_unit": "c" }, {"date": "2015-04-21",  "day": [ {"weather_code": "2", "weather_text": "Cloudy skies",  "wind": [ {"dir": "ENE", "dir_degree": "57", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "16",  "night": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "66", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "5", "temp_unit": "c" } ] }}
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.open('GET', request);
-	var json;	// Holds the data returned from this fn.
+	var json;
+	// Holds the data returned from this fn.
 	// onload is called on a successful AJAX query; 'this' is the response obj.
 	xhr.onload = function() {
 		var text = this.responseText;
@@ -97,7 +101,12 @@ var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 	};
 	// Sends the AJAX RESTful web service request
 	xhr.send();
-//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
+	//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
+};
+
+exports.setupWeatherBuild = function(address, lat, lon, zipcode, callback) {
+	GeoInfo = new GeoData(address, lat, lon, zipcode);
+	buildWeatherRequestByCoords(lat, lon, callback, 0);
 };
 
 // Make the following method the entry point into this library
@@ -130,7 +139,7 @@ var forwardGeocodeNative = function(address, callback) {
 		// Process the AJAX RESTful response
 		var addressComponents = json.results[0].address_components;
 		var zipcode = null;
-		for (var i = 0; i < addressComponents.length; i++) { //try to get zip code
+		for (var i = 0; i < addressComponents.length; i++) {//try to get zip code
 			if (addressComponents[i].types == "postal_code")
 				zipcode = addressComponents[i].long_name;
 		}
@@ -142,14 +151,14 @@ var forwardGeocodeNative = function(address, callback) {
 		// Think about fetching location name f.e. Los Angeles (which has city ID USCA0638)
 		// Think about querying http://wxdata.weather.com/wxdata/search/search?where=Los%20Angeles,
 		// parsing out the ID field and fetching http://www.weather.com/weather/today/l/USCA0638 in a WebView
-		
+
 		// Populates GeoInfo with the location data collected from Google Maps
 		GeoInfo = new GeoData(address, lat, lon, zipcode);
 		// If the new weather location is near the last one, ignore it and send back old WeatherInfo
 		if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {
 			alert("You are a bit close, don\'t you think?");
 			callback(GeoInfo, WeatherInfo);
-		} else { // Get the latest weather info.
+		} else {// Get the latest weather info.
 			prevLat = lat;
 			prevLon = lon;
 			buildWeatherRequestByCoords(lat, lon, callback, 0);

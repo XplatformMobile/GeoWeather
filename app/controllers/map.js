@@ -24,13 +24,14 @@ $.map.addEventListener('click', function(e) {
 });
 
 // Open a browser window if you tap on the right (of what? -JJB)
+
 $.map.addEventListener('click', function(e) {
-	// alert(e.clicksource);
-	// debug::: alert(e.annotation);
+
 
 	// if we are in an annotation and either title, infoWindow or subtitle was clicked
-	// launch or web window
+	// launch or web window  - Rightbutton weather icon for ios
 	
+		
 	// iOS, needs rightButton event 
 	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
 		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
@@ -53,10 +54,10 @@ $.map.addEventListener('click', function(e) {
 		var webview = Ti.UI.createWebView({
 			url : weathergovURL
 		});
-		webwin.add(webview);
-
+	
 		webwin.open();
 		webwin.add(webview);
+
 
 		// added a close button
 		var closeWebView = Ti.UI.createButton({
@@ -72,35 +73,27 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
-// Function that adds new pushpin to the map from a longpress on the map location
-// longpress is broken without some kind of container/overlay
-// longclick doesn't return any event information
-// Considering alternatives:
-// Looks like there is a container, but how to intercept the events?
-
-$.map.addEventListener("longpress", function(e) {
-	if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
-		$.map.removeAnnotation(e.annotation);
-	}
-	alert(e.x);	// debugging info.
-	alert(e.y);
-
-	var coordinate = calculateLatLngfromPixels($.map, e.x, e.y);
-
-	var longitude = coordinate.lon;
-	var latitude = coordinate.lat;
-
-	var coords = coordinate.lat + " " + coordinate.lon;
-
-	geo.forwardGeocode(coords, function(geodata, weather) {
-		// send request to geo library with coordinates to get location info and weather
-		exports.addAnnotation(geodata, weather);
-		// the function call above shows the pushpin on the map
-	});
-});
+function reverseGeocodeAnnotation(coords, center) {
+  'use strict';				
+		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
+    	if (!e.success || e.error) {
+      		return alert(e.error || 'Could not reverse geocode the position.');
+    	}
+    	// Use the address of the first place found for the title
+    	// location.title = e.places[0].address;
+    	var address = e.places[0].address;
+		var lat = e.places[0].latitude;
+		var lon = e.places[0].longitude;
+		var zipcode = e.places[0].zipcode;
+		// need explicit call to exports.addAnnotation because of its function name
+	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
+		    exports.addAnnotation(geodata, weather);
+	   });
+ });
+}
 
 // Called when a new pushpin is added to the map
-exports.addAnnotation = function(geodata, weather) {
+exports.addAnnotation = function(geodata, weather) {	
 	alert(geodata.title);	// echos location info to the user
 	// populate the annotation's model defined in the file annotation.js
 	if (weather != null || weather != undefined) {
