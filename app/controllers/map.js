@@ -82,6 +82,10 @@ function reverseGeocodeAnnotation(coords, center) {
     	// Use the address of the first place found for the title
     	// location.title = e.places[0].address;
     	var address = e.places[0].address;
+    	address = address.replace("United States of America","USA");
+    	 
+    	
+    	
 		var lat = e.places[0].latitude;
 		var lon = e.places[0].longitude;
 		var zipcode = e.places[0].zipcode;
@@ -91,6 +95,21 @@ function reverseGeocodeAnnotation(coords, center) {
 	   });
  });
 }
+
+
+function firstAnnotation() {	
+	geo.forwardGeocode("MSOE", function(geodata, weather) {
+		$.trigger('addAnnotation', {
+			geodata : geodata,
+			weather : weather
+		});
+	});
+	
+}
+
+
+
+
 
 // Called when a new pushpin is added to the map
 exports.addAnnotation = function(geodata, weather) {	
@@ -183,3 +202,5 @@ var getWeatherIcon = function(weather_code) {
 	}
 	return JSON;
 };
+
+
