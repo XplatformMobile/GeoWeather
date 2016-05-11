@@ -1,6 +1,6 @@
 <Alloy>
-	<Module id="map" module="ti.map" onLongclick="reverseGeocodeAnnotation"  method="createView" platform="ios,android">
-		<Require src="annotation" title="Milwaukee" subtitle="Milwaukee, WI" />
+	<Module id="map" module="ti.map"  onLongclick="reverseGeocodeAnnotation"  method="createView" platform="ios,android">
+		
 	</Module>
 	<View id="map" ns="ti.map" method="createView" platform="mobileweb">
 		<Require src="annotation" title="Appcelerator" />
