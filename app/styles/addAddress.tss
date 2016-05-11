@@ -2,14 +2,26 @@
     height: '40dp',
     top: '5dp',
     left: '5dp',
-    right: '50dp',
+    right: '100dp',
     style: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
     color: '#fff',	// white
     backgroundColor: '#949494',	// med. gray
     paddingLeft: '5dp'
 }
 
-"Button": {
+"#button": {
+    font: {
+        fontSize: '20dp',
+        fontWeight: 'bold'	
+    },
+    top: '5dp',
+    height: '40dp',
+    width: '40dp',
+    right: '50db',
+    color: '#fff'
+}
+
+"#pushpins": {
     font: {
         fontSize: '20dp',
         fontWeight: 'bold'	
