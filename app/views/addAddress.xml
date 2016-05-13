@@ -1,6 +1,9 @@
 <Alloy>
 	<View class="addAddress">
 		<TextField id="textField" hintText="Type addr. or coords. & hit + button --->" />
+		<Button id="pushpins" title="=" />
+		
 		<Button id="button" title="+" />
+		
 	</View>
 </Alloy>

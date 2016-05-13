@@ -11,7 +11,7 @@
     <fullscreen>false</fullscreen>
     <navbar-hidden>false</navbar-hidden>
     <analytics>true</analytics>
-    <guid>c5adc9b0-0115-463c-9eee-52696e400de4</guid>
+    <guid>8ce8b1c9-c339-4104-9777-452c27b7059d</guid>
     <property name="ti.ui.defaultunit" type="string">dp</property>
     <ios>
         <plist>
@@ -57,7 +57,8 @@
             <permission
                 android:name="edu.msoe.blessing.geoweather.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
             <application>
-                <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCNgColojC-JA49hcL13wTL5uyhvb0ngzs"/>
+                <meta-data
+                    android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCNgColojC-JA49hcL13wTL5uyhvb0ngzs"/>
             </application>
         </manifest>
     </android>
@@ -70,16 +71,17 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
+        <module platform="iphone">ti.map</module>
         <module platform="android">ti.map</module>
     </modules>
     <deployment-targets>
-        <target device="iphone">false</target>
-        <target device="ipad">false</target>
+        <target device="iphone">true</target>
+        <target device="ipad">true</target>
         <target device="android">true</target>
         <target device="mobileweb">true</target>
         <target device="windows">false</target>
     </deployment-targets>
-    <sdk-version>5.2.1.GA</sdk-version>
+    <sdk-version>5.2.0.GA</sdk-version>
     <plugins>
         <plugin version="1.0">ti.alloy</plugin>
     </plugins>
