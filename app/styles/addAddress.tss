@@ -9,7 +9,7 @@
     paddingLeft: '5dp'
 }
 
-"#button": {
+"button": {
     font: {
         fontSize: '20dp',
         fontWeight: 'bold'	
@@ -21,7 +21,7 @@
     color: '#fff'
 }
 
-"#pushpins": {
+"pushpins": {
     font: {
         fontSize: '20dp',
         fontWeight: 'bold'	
