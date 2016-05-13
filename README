@@ -16,4 +16,5 @@ see the LICENSE file for the full license.
 
 This application is a mashup of two other Titanium demos: GeoCoder and
 RSS Reader.  This app uses Web Services (a la RSS Reader) to get weather
-data and display an annotation associated with a pushpin on a Google Map.
+data and display the local weather in an annotation associated with a
+pushpin on a Google Map.
