@@ -12,7 +12,7 @@
 			<!-- TODO: Create a button to close locationListWin, preferably at the
 			same spot as it would be on the home screen -->
 			<View id="closeView" onclick="closeLocationListWin">
-				<ImageView id="closeImage">	
+				<Button id="pushpins" title="=" />		
 			</View>
 		</View>
 		
