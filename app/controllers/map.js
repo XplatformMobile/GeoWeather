@@ -1,4 +1,4 @@
-// function to get coordinates from the pressed location on map
+// Function to get coordinates from the pressed location on map
 // returns JSON with latitude and longtitude
 var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	var region = mapview.actualRegion || mapview.region;
@@ -15,7 +15,7 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	};
 };
 
-// registers a callback fn. that removes the annotation when user closes the annotation or
+// Registers a callback fn. that removes the annotation when user closes the annotation or
 // clicks the map outside the annotation
 $.map.addEventListener('click', function(e) {
 	if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
@@ -23,21 +23,19 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
-//
-// Open a browser window if you tap on the right
-//
+// Open a browser window if you tap on the right (of what? -JJB)
+
 $.map.addEventListener('click', function(e) {
-	// alert(e.clicksource);
-	// debug::: alert(e.annotation);
+
 
 	// if we are in an annotation and either title, infoWindow or subtitle was clicked
-	// launch or web window
+	// launch or web window  - Rightbutton weather icon for ios
 	
-	// Ios, needs rightButton event 
-	if (e.annotation &&   (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' ) || (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
 		
+	// iOS, needs rightButton event 
+	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
+		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
 		// should try {height} etc
-		
 		var webwin = Ti.UI.createWindow();
 
 		// access previously set globals.		
@@ -56,13 +54,12 @@ $.map.addEventListener('click', function(e) {
 		var webview = Ti.UI.createWebView({
 			url : weathergovURL
 		});
-		webwin.add(webview);
-
+	
 		webwin.open();
 		webwin.add(webview);
 
-		// added a close button
 
+		// added a close button
 		var closeWebView = Ti.UI.createButton({
 			title : 'close',
 			left : 5,
@@ -73,41 +70,51 @@ $.map.addEventListener('click', function(e) {
 		closeWebView.addEventListener('click', function() {
 			webwin.close();
 		});
-
 	}
 });
 
-// function that adds new pushpin to the map from a longpress on the map location
-// longpress is broke without some kind of container/overlay
-// longclick doesn't return any event information
-// considering alternatives
-// Looks like there is a container, but how to intercept the events.
+function reverseGeocodeAnnotation(coords, center) {
+  'use strict';				
+		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
+    	if (!e.success || e.error) {
+      		return alert(e.error || 'Could not reverse geocode the position.');
+    	}
+    	// Use the address of the first place found for the title
+    	// location.title = e.places[0].address;
+    	var address = e.places[0].address;
+    	address = address.replace("United States of America","USA");
+    	 
+    	
+    	
+		var lat = e.places[0].latitude;
+		var lon = e.places[0].longitude;
+		var zipcode = e.places[0].zipcode;
+		// need explicit call to exports.addAnnotation because of its function name
+	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
+		    exports.addAnnotation(geodata, weather);
+	   });
+ });
+}
 
-$.map.addEventListener("longpress", function(e) {
-	if (e.annotation && (e.clicksource === 'leftButton' || e.clicksource == 'leftPane')) {
-		$.map.removeAnnotation(e.annotation);
-	}
 
-	alert(e.x);
-	alert(e.y);
-
-	var coordinate = calculateLatLngfromPixels($.map, e.x, e.y);
-
-	var longitude = coordinate.lon;
-	var latitude = coordinate.lat;
-
-	var coords = coordinate.lat + " " + coordinate.lon;
-
-	geo.forwardGeocode(coords, function(geodata, weather) {
-		// send request to geo library with coordinates to get location info and weather
-		exports.addAnnotation(geodata, weather);
-		// the function call above shows the pushpin on the map
+function firstAnnotation() {	
+	geo.forwardGeocode("MSOE", function(geodata, weather) {
+		$.trigger('addAnnotation', {
+			geodata : geodata,
+			weather : weather
+		});
 	});
-});
+	
+}
 
-// called when a new pushpin is added to the map
-exports.addAnnotation = function(geodata, weather) {
-	alert(geodata.title);
+
+
+
+
+// Called when a new pushpin is added to the map
+exports.addAnnotation = function(geodata, weather) {	
+	alert(geodata.title);	// echos location info to the user
+	// populate the annotation's model defined in the file annotation.js
 	if (weather != null || weather != undefined) {
 		var tempInfo = weather.weather.curren_weather[0].temp;
 		tempInfo += "°" + weather.weather.curren_weather[0].temp_unit.toUpperCase();
@@ -141,25 +148,26 @@ exports.addAnnotation = function(geodata, weather) {
 };
 
 /*
+// Was this the original addAnnotation fn from GeoCoder?  -JJB
 exports.addAnnotation = function(geodata) {
-var annotation = Alloy.createController('annotation', {
-title : geodata.title,
-subtitle : geodata.zip,
-latitude : geodata.coords.latitude,
-longitude : geodata.coords.longitude
-});
-$.map.addAnnotation(annotation.getView());
-$.map.setLocation({
-latitude : geodata.coords.latitude,
-longitude : geodata.coords.longitude,
-latitudeDelta : 1,
-longitudeDelta : 1
-});
-};
+	var annotation = Alloy.createController('annotation', {
+		title : geodata.title,
+		subtitle : geodata.zip,
+		latitude : geodata.coords.latitude,
+		longitude : geodata.coords.longitude
+	});
+	$.map.addAnnotation(annotation.getView());
+	$.map.setLocation({
+		latitude : geodata.coords.latitude,
+		longitude : geodata.coords.longitude,
+		latitudeDelta : 1,
+		longitudeDelta : 1
+	});
+}; 
 */
 
 /**Method that will get the weather information and the day Icon. If possible, see if it is day or night as the icon can
- be chosen by the field[3](day) or field[4](night). In this project it was not possible, so the day icon was chosen.
+ be chosen by the field[3](day) or field[4](night). The night icon didn't look very useful, so the day icon was chosen.
 
  @return: JSON with weather_text and the image_icon's path. In case the weather_code is invalid or the method
  for some reason could not create the JSON, a JSON with weather_text and image_icon with values "N/A" is returned.
@@ -194,3 +202,7 @@ var getWeatherIcon = function(weather_code) {
 	}
 	return JSON;
 };
+
+
+
+
