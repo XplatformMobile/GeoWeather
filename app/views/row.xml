@@ -1,0 +1,6 @@
+<Alloy>
+	<TableViewRow id="row">
+		<Label id="location" text="{item}"/>	<!-- Backbone.js uses { }'s syntax -->
+		<ImageView id="remove" onClick="deleteLocation"/>
+	</TableViewRow>
+</Alloy>
