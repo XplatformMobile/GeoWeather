@@ -1,5 +1,5 @@
 <Alloy>
-	<Window id="addLocationListItemWin" title "Add Location" modal="true" onOpen="focusLatitudeTextField">
+	<Window id="addLocationListItemWin" title="Add Location" modal="true" onOpen="focusLatitudeTextField">
 		<Label id="latitude">Latitude:</Label>
 		<TextField class="textField" id="latitudeTextField" onReturn="focusLongitudeTextField"/>
 		<Label id="longitude">Longitude:</Label>
