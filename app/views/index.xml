@@ -3,6 +3,5 @@
 	<Window class="container">
 		<Require src="addAddress" id="addAddress" />
 		<Require src="map" id="map" />
-		<Require src="locationsList" id="locationsList" />
 	</Window>
 </Alloy>
