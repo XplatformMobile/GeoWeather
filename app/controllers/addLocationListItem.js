@@ -3,7 +3,7 @@ var args = $.args;
 
 function additem() {
 	var locations = Alloy.Collections.location;
-	
+
 	// TODO: Create a way to fill in the rest of the columns (i.e., locationName, temperature,
 	// units, and description)
 	// Create a new model for the location collection
@@ -11,23 +11,27 @@ function additem() {
 		latitude : $.latitudeTextField.value,
 		longitude : $.longitudeTextField.value
 	});
-	
+
 	// Add new model to the global collection
 	locations.add(address);
-	
+
 	// Save the model to persistent storage
 	address.save();
-	
+
 	// TODO: Create a way to add item to the main page
-	
+
 	// Reload the locations
 	locations.fetch();
-	
+
 	closeWindow();
 }
 
 function focusLongitudeTextField() {
 	$.longitudeTextField.focus();
+}
+
+function focusLatitudeTextField() {
+	$.latitudeTextField.focus();
 }
 
 function closeKeyboard(e) {

@@ -1,21 +1,21 @@
 <!-- Duplicated from To-Do-List -->
 <Alloy>
 	<Window id="locationListWin" title="Location List" modal="true">
-		
+
 		<!-- Header -->
 		<View id="header">
 			<Label id="title">Locations List</Label>
 			<View class="divider"/>
-			<View id="addView" onClick="addLocationListItem">
+			<View id="addView" onClick="addLocation">
 				<ImageView id="addImage"/>
 			</View>
 			<!-- TODO: Create a button to close locationListWin, preferably at the
 			same spot as it would be on the home screen -->
 			<View id="closeView" onclick="closeLocationListWin">
-				<Button id="pushpins" title="=" />		
+				<Button id="pushpins" title="=" />
 			</View>
 		</View>
-		
+
 		<!-- Main table for locations
 		Use model-view binding to render the rows of this table
 		based on the models in the given collection. "dataCollection"
@@ -27,11 +27,10 @@
 		opportunity to modify the model's values or appearance
 		row each row in the table being generated from the SQLlite DB.
 		-->
-		<TableView id="locationTable" dataCollection="location"
-			dataFilter="whereFunction" dataTransform="transformFunction">
+		<TableView id="locationTable" dataCollection="location" dataTransform="transformFunction">
 			<Require src="row"/>
 			<!-- Loads "row" component -->
 		</TableView>
-		
+
 	</Window>
 </Alloy>
