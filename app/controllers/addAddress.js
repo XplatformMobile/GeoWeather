@@ -13,3 +13,10 @@ $.button.addEventListener('click', function(e) {
 		});
 	});
 });
+
+$.pushpins.addEventListener('click', function(e) {
+	
+		Alloy.createController('locationList').getView().open();
+			
+		
+});
