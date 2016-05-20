@@ -5,14 +5,10 @@
 		<!-- Header -->
 		<View id="header">
 			<Label id="title">Locations List</Label>
-			<View class="divider"/>
-			<View id="addView" onClick="addLocation">
-				<ImageView id="addImage"/>
-			</View>
-			<!-- TODO: Create a button to close locationListWin, preferably at the
-			same spot as it would be on the home screen -->
-			<View id="closeView" onclick="closeLocationListWin">
+			<View class="addAddress">
+				<TextField id="textField" hintText="Type addr. or coords. & hit + button --->" />
 				<Button id="pushpins" title="=" />
+				<Button id="button" title="+" />
 			</View>
 		</View>
 

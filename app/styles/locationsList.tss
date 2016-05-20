@@ -18,7 +18,7 @@
 
 "#header": {	// Red bar across top of app
 	top: Alloy.Globals.top,
-	heigh: "50dp",
+	height: "50dp",
 	width: Ti.UI.FILL,
 	backgroundGradient: {
 		type: "linear",
@@ -40,43 +40,38 @@
 	}
 }
 
-".divider": {	// the thin gray vertical line in the header
-	height: "48dp",
-	width: "3dp",
-	top: "1dp",
-	right: "50dp",
-	backgroundGradient: {
-		type: "linear",
-		startPoint: { x: "0%", y: "0%" },
-		endPoint: { x: "100%", y: "0%" },
-		colors: [
-			{ color: "#666", offset: 0.0 },
-			{ color: "#ccc", offset: 0.5 },
-			{ color: "#666", offset: 1.0 }
-		]
-	}
+"#button": {
+    font: {
+        fontSize: '20dp',
+        fontWeight: 'bold'	
+    },
+    top: '5dp',
+    height: '40dp',
+    width: '40dp',
+    right: '50dp',
+    color: '#fff',
+    paddingRight: '50dp'
 }
 
-"#addView": {	// The view for id = addImage below
-	top: 0,
-	bottom: 0,
-	right: 0,
-	width: "50dp"
+"TextField": {
+    height: '40dp',
+    top: '0dp',
+    left: '5dp',
+    right: '100dp',
+    style: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+    color: '#fff',	// white
+    backgroundColor: '#949494',	// med. gray
+    paddingLeft: '5dp'
 }
 
-"#addImage": {	// The + sign w/ circle around it
-	height: Ti.UI.FILL,
-	width: Ti.UI.FILL,
-	color: "#fff",
-	backgroundColor: "transparent",
-	image: "/ic_menu_add.png",
-	touchEngabled: false
+"#pushpins": {
+    font: {
+        fontSize: '20dp',
+        fontWeight: 'bold'	
+    },
+    top: '5dp',
+    height: '40dp',
+    width: '40dp',
+    right: '5dp',
+    color: '#fff'
 }
-
-"closeView": {
-	top: 0,
-	bottom: 0,
-	right: 0,
-	width: "50dp"
-}
-
