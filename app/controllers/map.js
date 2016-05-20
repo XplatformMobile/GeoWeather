@@ -24,14 +24,10 @@ $.map.addEventListener('click', function(e) {
 });
 
 // Open a browser window if you tap on the right (of what? -JJB)
-
 $.map.addEventListener('click', function(e) {
-
-
-	// if we are in an annotation and either title, infoWindow or subtitle was clicked
-	// launch or web window  - Rightbutton weather icon for ios
+	// If we are in an annotation and either title, infoWindow or subtitle was clicked
+	// launch or web window  - Rightbutton weather icon for iOS
 	
-		
 	// iOS, needs rightButton event 
 	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
 		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
@@ -58,7 +54,6 @@ $.map.addEventListener('click', function(e) {
 		webwin.open();
 		webwin.add(webview);
 
-
 		// added a close button
 		var closeWebView = Ti.UI.createButton({
 			title : 'close',
@@ -83,9 +78,6 @@ function reverseGeocodeAnnotation(coords, center) {
     	// location.title = e.places[0].address;
     	var address = e.places[0].address;
     	address = address.replace("United States of America","USA");
-    	 
-    	
-    	
 		var lat = e.places[0].latitude;
 		var lon = e.places[0].longitude;
 		var zipcode = e.places[0].zipcode;
@@ -96,7 +88,6 @@ function reverseGeocodeAnnotation(coords, center) {
  });
 }
 
-
 function firstAnnotation() {	
 	geo.forwardGeocode("MSOE", function(geodata, weather) {
 		$.trigger('addAnnotation', {
@@ -104,12 +95,7 @@ function firstAnnotation() {
 			weather : weather
 		});
 	});
-	
 }
-
-
-
-
 
 // Called when a new pushpin is added to the map
 exports.addAnnotation = function(geodata, weather) {	
@@ -138,7 +124,6 @@ exports.addAnnotation = function(geodata, weather) {
 	// Turns out I don't need globals.
 	// Ti.App.currentLat = geodata.coords.latitude;
 	// Ti.App.currentLon = geodata.coords.longitude;
-
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
@@ -202,7 +187,4 @@ var getWeatherIcon = function(weather_code) {
 	}
 	return JSON;
 };
-
-
-
 

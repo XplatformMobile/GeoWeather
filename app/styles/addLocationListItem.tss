@@ -1,7 +1,7 @@
 // Default code
 /*
 ".container" : {
-  
+
 }
 */
 
@@ -19,6 +19,6 @@
 }
 
 ".button":{
-	width:'50%',
-	top:'20dp'
+	width: '50%',
+	top: '20dp'
 }

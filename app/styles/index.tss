@@ -1,8 +1,9 @@
 "#index": {
-    backgroundColor:'#fff',
-    fullscreen: false,
-    exitOnClose: true
+	backgroundColor: '#fff',
+	fullscreen: false,
+	exitOnClose: true
 }
+
 ".container": {
 	top: Alloy.Globals.winTop
 }
