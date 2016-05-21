@@ -97,8 +97,35 @@ function firstAnnotation() {
 	});
 }
 
+
+exports.addAnnotation = function (geodata, weather)
+{
+	exports.addAnnotationToMap(geodata,weather);	
+	
+	var locations = Alloy.Collections.location;
+	// Create a new model for the location collection
+	var address = Alloy.createModel('Location', {
+	    locationName : geodata.title,
+        latitude : geodata.coords.latitude,
+		longitude : geodata.coords.longitude,
+	});
+
+	// Add new model to the global collection
+	locations.add(address);
+
+	// Save the model to persistent storage
+	address.save();
+
+	// TODO: Create a way to add item to the main page
+
+	// Reload the locations
+	locations.fetch();
+};
+
+
+
 // Called when a new pushpin is added to the map
-exports.addAnnotation = function(geodata, weather) {	
+exports.addAnnotationToMap = function(geodata, weather) {	
 	alert(geodata.title);	// echos location info to the user
 	// populate the annotation's model defined in the file annotation.js
 	if (weather != null || weather != undefined) {
@@ -120,10 +147,7 @@ exports.addAnnotation = function(geodata, weather) {
 	});
 	$.map.addAnnotation(annotation.getView());
 
-	// pinnowjs: set a global for the coordinates
-	// Turns out I don't need globals.
-	// Ti.App.currentLat = geodata.coords.latitude;
-	// Ti.App.currentLon = geodata.coords.longitude;
+	
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,

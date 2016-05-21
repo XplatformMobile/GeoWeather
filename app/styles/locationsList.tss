@@ -8,8 +8,11 @@
 "#locationListWin": {	// Top-level window
 	fullscreen: false,
 	navBarHidden: true,
-	exitOnClose: true
+	exitOnClose: false
+
 }
+// needed exitOnClose false.. it was set true..
+
 
 "#locationTable": {	// Holds location items
 	top: Alloy.Globals.tableTop,

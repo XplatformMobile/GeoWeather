@@ -10,17 +10,27 @@ var id;
 // will be null if there is no binding in place.
 if ($model) {
 	id = $model.id;
-	$.row.backgroundColor = '#fff';	// White
-	$.location.color = '#000';	// Color text black
+	$.row.backgroundColor = '#fff';
+	// White
+	$.location.color = '#000';
+	// Color text black
+}
+
+function zoomLocation(e) {
+	var location = locations.get(id);
+	alert (location.get('locationName'));
+//    map.zoom(location.get('latitude'),location.get('longitude'));
+     
 }
 
 function deleteLocation(e) {
 	// Prevent bubbling up to the row
 	e.cancelBubble = true;
-	
+
 	// Find the location by id
-	var location = locations.get(id);	// local location != global location
-	
+	var location = locations.get(id);
+	// local location != global location
+
 	// Destroy the model from persistence layer, which will in turn remove
 	// it from the collection, and model-view binding will automatically
 	// reflect this in the tableview
