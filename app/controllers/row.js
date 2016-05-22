@@ -19,7 +19,6 @@ if ($model) {
 function zoomLocation(e) {
 	var location = locations.get(id);
 	alert (location.get('locationName'));
-//    map.zoom(location.get('latitude'),location.get('longitude'));
      
 }
 

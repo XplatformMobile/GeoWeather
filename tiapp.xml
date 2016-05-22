@@ -11,7 +11,7 @@
     <fullscreen>false</fullscreen>
     <navbar-hidden>false</navbar-hidden>
     <analytics>true</analytics>
-	<guid>82cebd7f-19a0-4ff7-9666-4b5b9aec347f</guid>
+	<guid>8ce8b1c9-c339-4104-9777-452c27b7059d</guid>
     <property name="ti.ui.defaultunit" type="string">dp</property>
     <ios>
         <plist>
