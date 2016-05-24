@@ -20,7 +20,8 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 
 Ti.App.addEventListener('moveto', function moveto(e) {
 	
-		
+   // move to this location on the map.
+   
     $.map.setLocation({
 		latitude : e.latitude,
 		longitude :e.longitude,

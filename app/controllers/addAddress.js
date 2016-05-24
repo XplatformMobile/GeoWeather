@@ -14,9 +14,26 @@ $.button.addEventListener('click', function(e) {
 	});
 });
 
+Ti.App.addListener ('textfield', function(e) {
+
+
+	geo.forwardGeocode(e.textfield, function(geodata, weather) {
+		$.trigger('addAnnotation', {
+			geodata : geodata,
+			weather : weather
+		});
+	});
+});
+
+
+
+
 $.pushpins.addEventListener('click', function(e) {
 	
 		Alloy.createController('locationsList').getView().open();
 			
 		
 });
+
+
+

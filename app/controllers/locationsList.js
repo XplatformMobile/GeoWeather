@@ -35,12 +35,21 @@ function closeWindow() {
 
 // Define a click event handler on the + button
 $.button.addEventListener('click', function(e) {
-	closeWindow();			
+	closeWindow();
+	Ti.App.fireEvent('textfield',{textfield: $.textField.value }
+		);			
 	
 });
 
 $.pushpins.addEventListener('click', function(e) {
 	closeWindow();		
 });
+
+
+exports.destroy = function() {
+    // Remove the listener first
+    Ti.App.addRemoveListener('closelist');
+    $.destroy();
+};
 
 
