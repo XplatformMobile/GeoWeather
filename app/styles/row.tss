@@ -5,7 +5,7 @@
 }
 
 "#row[platform=ios]": {
-	selectionStyle: Ti.UI.iPHone.TableViewCellSelectionStyle.NONE
+	selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
 }
 
 "#location": {
