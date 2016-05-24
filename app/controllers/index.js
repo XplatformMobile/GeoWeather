@@ -43,6 +43,6 @@ function startApp() {
 	$.addAddress.on('addAnnotation', function(e) {
 		$.map.addAnnotation(e.geodata, e.weather);
 	});
-	
+	$.map.loadpins();
 	$.index.open();	// opens the top-level app window (see index.xml for more)
 }

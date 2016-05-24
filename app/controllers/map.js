@@ -1,5 +1,7 @@
 // Function to get coordinates from the pressed location on map
 // returns JSON with latitude and longtitude
+
+
 var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	var region = mapview.actualRegion || mapview.region;
 	var widthInPixels = mapview.rect.width;
@@ -14,6 +16,7 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 		lon : (xPixels - widthInPixels / 2) * widthDegPerPixel + region.longitude
 	};
 };
+
 
 // Registers a callback fn. that removes the annotation when user closes the annotation or
 // clicks the map outside the annotation
@@ -88,6 +91,27 @@ function reverseGeocodeAnnotation(coords, center) {
  });
 }
 
+function reverseGeocodeAnnotationWithoutCollection(coords, center) {
+  'use strict';				
+		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
+    	if (!e.success || e.error) {
+      		return alert(e.error || 'Could not reverse geocode the position.');
+    	}
+    	// Use the address of the first place found for the title
+    	// location.title = e.places[0].address;
+    	var address = e.places[0].address;
+    	address = address.replace("United States of America","USA");
+		var lat = e.places[0].latitude;
+		var lon = e.places[0].longitude;
+		var zipcode = e.places[0].zipcode;
+		// need explicit call to exports.addAnnotation because of its function name
+	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
+		    exports.addAnnotationToMap(geodata, weather);
+	   });
+ });
+}
+
+
 function firstAnnotation() {	
 	geo.forwardGeocode("MSOE", function(geodata, weather) {
 		$.trigger('addAnnotation', {
@@ -101,7 +125,7 @@ function firstAnnotation() {
 exports.addAnnotation = function (geodata, weather)
 {
 	exports.addAnnotationToMap(geodata,weather);	
-	
+	locations.fetch();	
 	var locations = Alloy.Collections.location;
 	// Create a new model for the location collection
 	var address = Alloy.createModel('Location', {
@@ -121,6 +145,21 @@ exports.addAnnotation = function (geodata, weather)
 	// Reload the locations
 	locations.fetch();
 };
+
+exports.loadpins = function (e) {
+	var locations = Alloy.Collections.location;
+    locations.fetch();
+    locations.each ( function (loc) {
+    	var coords = {
+    		"latitude": loc.get('latitude'),
+    		"longitude": loc.get('longitude') 
+    		
+    	};
+		reverseGeocodeAnnotationWithoutCollection(coords); 
+    });
+    
+};
+
 
 
 
