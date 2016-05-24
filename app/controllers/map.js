@@ -50,6 +50,7 @@ $.map.addEventListener('click', function(e) {
 $.map.addEventListener('click', function(e) {
 	// If we are in an annotation and either title, infoWindow or subtitle was clicked
 	// launch or web window  - Rightbutton weather icon for iOS
+	alert (e);
 	
 	// iOS, needs rightButton event 
 	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
@@ -177,7 +178,7 @@ exports.loadpins = function (e) {
     		"longitude": loc.get('longitude') 
     		
     	};
-    	locname = loc.get('locationName')
+    	locname = loc.get('locationName');
     	setupWeatherAnnotationWithoutCollection(locname,coords); 
     });
     
