@@ -1,6 +1,6 @@
 <Alloy>
 	<TableViewRow id="row">
-		<Label id="location" text="{locationName}" onClick="zoomLocation">
+		<Label id="location" text="{locationName}" onClick="moveLocation">
 			
 		</Label>
 			<!-- Backbone.js uses { }'s syntax -->

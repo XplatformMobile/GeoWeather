@@ -16,10 +16,19 @@ if ($model) {
 	// Color text black
 }
 
-function zoomLocation(e) {
+function moveLocation(e) {
 	var location = locations.get(id);
-	alert (location.get('locationName'));
-     
+    lat = location.get('latitude');
+    long = location.get('longitude');
+
+    var coords = { "latitude": lat, "longitude": long  };
+    
+  
+  
+	Ti.App.fireEvent('moveto',coords );
+	Ti.App.fireEvent('closelist');
+	  
+	
 }
 
 function deleteLocation(e) {

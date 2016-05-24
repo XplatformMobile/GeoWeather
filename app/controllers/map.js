@@ -18,6 +18,22 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 };
 
 
+Ti.App.addEventListener('moveto', function moveto(e) {
+	
+		
+    $.map.setLocation({
+		latitude : e.latitude,
+		longitude :e.longitude,
+		latitudeDelta : 1,
+		longitudeDelta : 1
+	});
+	
+	
+	
+});
+
+
+
 // Registers a callback fn. that removes the annotation when user closes the annotation or
 // clicks the map outside the annotation
 $.map.addEventListener('click', function(e) {
@@ -125,8 +141,9 @@ function firstAnnotation() {
 exports.addAnnotation = function (geodata, weather)
 {
 	exports.addAnnotationToMap(geodata,weather);	
-	locations.fetch();	
+	
 	var locations = Alloy.Collections.location;
+	locations.fetch();	
 	// Create a new model for the location collection
 	var address = Alloy.createModel('Location', {
 	    locationName : geodata.title,

@@ -19,11 +19,15 @@ function transformFunction(model) {
 	return transform;
 }
 
-// Open the "Add Location" window
-function addLocation() {	// loads the "addLocationListItem" component
-	Alloy.createController("addLocationListItem").getView().open();
-}
 
+Ti.App.addEventListener('closelist', function closelist(e) {
+	closeWindow();	
+
+	 
+});
+
+
+	
 function closeWindow() {
 	$.locationListWin.close();
 }
