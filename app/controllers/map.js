@@ -108,18 +108,19 @@ function reverseGeocodeAnnotation(coords, center) {
  });
 }
 
-function reverseGeocodeAnnotationWithoutCollection(coords, center) {
+function setupWeatherAnnotationWithoutCollection(title, coords, center) {
   'use strict';				
+  
+         // still reverse to get the zip
 		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
     	if (!e.success || e.error) {
       		return alert(e.error || 'Could not reverse geocode the position.');
     	}
     	// Use the address of the first place found for the title
     	// location.title = e.places[0].address;
-    	var address = e.places[0].address;
-    	address = address.replace("United States of America","USA");
-		var lat = e.places[0].latitude;
-		var lon = e.places[0].longitude;
+    	var address = title;
+		var lat = coords.latitude;
+		var lon = coords.longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
 	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
@@ -173,7 +174,8 @@ exports.loadpins = function (e) {
     		"longitude": loc.get('longitude') 
     		
     	};
-		reverseGeocodeAnnotationWithoutCollection(coords); 
+    	locname = loc.get('locationName')
+    	setupWeatherAnnotationWithoutCollection(locname,coords); 
     });
     
 };
