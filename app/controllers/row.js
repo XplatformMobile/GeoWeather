@@ -1,5 +1,10 @@
 // Arguments passed into this controller can be accessed via the `$.args` object directly or:
+
+
+
 var args = $.args;
+
+var dispatcher = require('dispatcher');
 
 var moment = require('alloy/moment');
 var locations = Alloy.Collections.location;
@@ -15,7 +20,7 @@ if ($model) {
 	$.location.color = '#000';
 	// Color text black
 }
-
+	
 function moveLocation(e) {
 	var location = locations.get(id);
     lat = location.get('latitude');
@@ -24,12 +29,17 @@ function moveLocation(e) {
     var coords = { "latitude": lat, "longitude": long  };
     
   
-  
-	Ti.App.fireEvent('moveto',coords );
-	Ti.App.fireEvent('closelist');
-	  
-	
+    dispatcher.trigger('moveto',coords);
+    dispatcher.trigger('closelist');
+    
+    
+/*	
+    working but leaks memmory like crazy
+    Ti.App.fireEvent('moveto',coords );
+	Ti.App.fireEvent('closelist'); */
+		
 }
+
 
 function deleteLocation(e) {
 	// Prevent bubbling up to the row

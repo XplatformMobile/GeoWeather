@@ -1,6 +1,7 @@
 // Function to get coordinates from the pressed location on map
 // returns JSON with latitude and longtitude
 
+var dispatcher = require('dispatcher');
 
 var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	var region = mapview.actualRegion || mapview.region;
@@ -18,17 +19,19 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 };
 
 
-Ti.App.addEventListener('moveto', function moveto(e) {
-	
-   // move to this location on the map.
-   
+/* Ti.App.addEventListener('moveto', function moveto(e) {
+ * 	
+ * 
+ */
+
+dispatcher.on('moveto', function moveto(e) {
+ 
     $.map.setLocation({
 		latitude : e.latitude,
 		longitude :e.longitude,
 		latitudeDelta : 1,
 		longitudeDelta : 1
 	});
-	
 	
 	
 });

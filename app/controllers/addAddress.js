@@ -1,4 +1,6 @@
 var geo = require('geo');
+var dispatcher = require('dispatcher');
+
 
 // Define a click event handler on the + button
 $.button.addEventListener('click', function(e) {
@@ -14,9 +16,7 @@ $.button.addEventListener('click', function(e) {
 	});
 });
 
-Ti.App.addListener ('textfield', function(e) {
-
-
+dispatcher.on('textfield', function(e) {
 	geo.forwardGeocode(e.textfield, function(geodata, weather) {
 		$.trigger('addAnnotation', {
 			geodata : geodata,

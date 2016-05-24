@@ -5,10 +5,16 @@ var args = $.args;
 */
 
 var geo = require('geo');
+var dispatcher = require('dispatcher');
+
 var locations = Alloy.Collections.location;
 
 // Open the app's Location List window
 $.locationListWin.open();
+
+
+dispatcher.on('closelist',closeWindow);
+
 
 // Fetch existing location items from storage (unless locations is null)
 locations && locations.fetch();
@@ -19,24 +25,19 @@ function transformFunction(model) {
 	return transform;
 }
 
-
-Ti.App.addEventListener('closelist', function closelist(e) {
-	closeWindow();	
-
-	 
-});
-
-
 	
 function closeWindow() {
 	$.locationListWin.close();
+	// have to remove listener or it causes memory leak. Ti listeners are persistant.
+	//
 }
 
 
 // Define a click event handler on the + button
 $.button.addEventListener('click', function(e) {
 	closeWindow();
-	Ti.App.fireEvent('textfield',{textfield: $.textField.value }
+	
+	dispatcher.trigger('textfield',{textfield: $.textField.value }
 		);			
 	
 });
@@ -45,11 +46,13 @@ $.pushpins.addEventListener('click', function(e) {
 	closeWindow();		
 });
 
-
+/* this doesn't work 
 exports.destroy = function() {
     // Remove the listener first
     Ti.App.addRemoveListener('closelist');
     $.destroy();
 };
+
+*/
 
 
