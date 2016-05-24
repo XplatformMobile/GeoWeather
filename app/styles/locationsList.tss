@@ -1,0 +1,80 @@
+// Duplicated from To-Do-List
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000"
+}
+
+"#locationListWin": {	// Top-level window
+	fullscreen: false,
+	navBarHidden: true,
+	exitOnClose: false
+
+}
+// needed exitOnClose false.. it was set true..
+
+
+"#locationTable": {	// Holds location items
+	top: Alloy.Globals.tableTop,
+	bottom: '46dp'
+}
+
+"#header": {	// Red bar across top of app
+	top: Alloy.Globals.top,
+	height: "50dp",
+	width: Ti.UI.FILL,
+	backgroundGradient: {
+		type: "linear",
+		startPoint: { x: "0%", y: "0%" },
+		endPoint: { x: "0%", y: "100%" },
+		colors: [
+			{ color: "#a00", offset: 0.0 },
+			{ color: "#800", offset: 1.0 }
+		]
+	}
+}
+
+"#title": {	// Title in the red bar
+	left: "10dp",
+	color: "#fff",
+	font: {
+		fontSize: '24dp',
+		fontWeight: 'bold'
+	}
+}
+
+"#button": {
+    font: {
+        fontSize: '20dp',
+        fontWeight: 'bold'	
+    },
+    top: '5dp',
+    height: '40dp',
+    width: '40dp',
+    right: '50dp',
+    color: '#fff',
+    paddingRight: '50dp'
+}
+
+"TextField": {
+    height: '40dp',
+    top: '0dp',
+    left: '5dp',
+    right: '100dp',
+    style: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+    color: '#fff',	// white
+    backgroundColor: '#949494',	// med. gray
+    paddingLeft: '5dp'
+}
+
+"#pushpins": {
+    font: {
+        fontSize: '20dp',
+        fontWeight: 'bold'	
+    },
+    top: '5dp',
+    height: '40dp',
+    width: '40dp',
+    right: '5dp',
+    color: '#fff'
+}

@@ -1,5 +1,8 @@
 // Function to get coordinates from the pressed location on map
 // returns JSON with latitude and longtitude
+
+var dispatcher = require('dispatcher');
+
 var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	var region = mapview.actualRegion || mapview.region;
 	var widthInPixels = mapview.rect.width;
@@ -15,6 +18,26 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	};
 };
 
+
+/* Ti.App.addEventListener('moveto', function moveto(e) {
+ * 	
+ * 
+ */
+
+dispatcher.on('moveto', function moveto(e) {
+ 
+    $.map.setLocation({
+		latitude : e.latitude,
+		longitude :e.longitude,
+		latitudeDelta : 1,
+		longitudeDelta : 1
+	});
+	
+	
+});
+
+
+
 // Registers a callback fn. that removes the annotation when user closes the annotation or
 // clicks the map outside the annotation
 $.map.addEventListener('click', function(e) {
@@ -24,14 +47,11 @@ $.map.addEventListener('click', function(e) {
 });
 
 // Open a browser window if you tap on the right (of what? -JJB)
-
 $.map.addEventListener('click', function(e) {
-
-
-	// if we are in an annotation and either title, infoWindow or subtitle was clicked
-	// launch or web window  - Rightbutton weather icon for ios
+	// If we are in an annotation and either title, infoWindow or subtitle was clicked
+	// launch or web window  - Rightbutton weather icon for iOS
+	alert (e);
 	
-		
 	// iOS, needs rightButton event 
 	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
 		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
@@ -58,7 +78,6 @@ $.map.addEventListener('click', function(e) {
 		webwin.open();
 		webwin.add(webview);
 
-
 		// added a close button
 		var closeWebView = Ti.UI.createButton({
 			title : 'close',
@@ -83,15 +102,33 @@ function reverseGeocodeAnnotation(coords, center) {
     	// location.title = e.places[0].address;
     	var address = e.places[0].address;
     	address = address.replace("United States of America","USA");
-    	 
-    	
-    	
 		var lat = e.places[0].latitude;
 		var lon = e.places[0].longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
 	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
 		    exports.addAnnotation(geodata, weather);
+	   });
+ });
+}
+
+function setupWeatherAnnotationWithoutCollection(title, coords, center) {
+  'use strict';				
+  
+         // still reverse to get the zip
+		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
+    	if (!e.success || e.error) {
+      		return alert(e.error || 'Could not reverse geocode the position.');
+    	}
+    	// Use the address of the first place found for the title
+    	// location.title = e.places[0].address;
+    	var address = title;
+		var lat = coords.latitude;
+		var lon = coords.longitude;
+		var zipcode = e.places[0].zipcode;
+		// need explicit call to exports.addAnnotation because of its function name
+	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
+		    exports.addAnnotationToMap(geodata, weather);
 	   });
  });
 }
@@ -104,15 +141,54 @@ function firstAnnotation() {
 			weather : weather
 		});
 	});
-	
 }
 
+
+exports.addAnnotation = function (geodata, weather)
+{
+	exports.addAnnotationToMap(geodata,weather);	
+	
+	var locations = Alloy.Collections.location;
+	locations.fetch();	
+	// Create a new model for the location collection
+	var address = Alloy.createModel('Location', {
+	    locationName : geodata.title,
+        latitude : geodata.coords.latitude,
+		longitude : geodata.coords.longitude,
+	});
+
+	// Add new model to the global collection
+	locations.add(address);
+
+	// Save the model to persistent storage
+	address.save();
+
+	// TODO: Create a way to add item to the main page
+
+	// Reload the locations
+	locations.fetch();
+};
+
+exports.loadpins = function (e) {
+	var locations = Alloy.Collections.location;
+    locations.fetch();
+    locations.each ( function (loc) {
+    	var coords = {
+    		"latitude": loc.get('latitude'),
+    		"longitude": loc.get('longitude') 
+    		
+    	};
+    	locname = loc.get('locationName');
+    	setupWeatherAnnotationWithoutCollection(locname,coords); 
+    });
+    
+};
 
 
 
 
 // Called when a new pushpin is added to the map
-exports.addAnnotation = function(geodata, weather) {	
+exports.addAnnotationToMap = function(geodata, weather) {	
 	alert(geodata.title);	// echos location info to the user
 	// populate the annotation's model defined in the file annotation.js
 	if (weather != null || weather != undefined) {
@@ -134,11 +210,7 @@ exports.addAnnotation = function(geodata, weather) {
 	});
 	$.map.addAnnotation(annotation.getView());
 
-	// pinnowjs: set a global for the coordinates
-	// Turns out I don't need globals.
-	// Ti.App.currentLat = geodata.coords.latitude;
-	// Ti.App.currentLon = geodata.coords.longitude;
-
+	
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
@@ -202,7 +274,4 @@ var getWeatherIcon = function(weather_code) {
 	}
 	return JSON;
 };
-
-
-
 

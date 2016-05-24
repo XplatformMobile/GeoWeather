@@ -29,10 +29,10 @@ if (Ti.Platform.osname === 'android')
 		alert("Google Play Service invalid");
 	} else if (code == MapModule.SERVICE_DISABLED) {
 		alert("Google Play Service disabled");
-	} else	//everythings fine, lets launch the app
+	} else	//everything's fine, lets launch the app
 		startApp();
 } else {
-	startApp();
+	startApp();	// This should work for iOS
 }
 
 // Register a function (that's called on an addAnnotation event)
@@ -43,6 +43,6 @@ function startApp() {
 	$.addAddress.on('addAnnotation', function(e) {
 		$.map.addAnnotation(e.geodata, e.weather);
 	});
-	
+	$.map.loadpins();
 	$.index.open();	// opens the top-level app window (see index.xml for more)
 }

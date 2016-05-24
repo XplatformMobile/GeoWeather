@@ -139,7 +139,7 @@ var forwardGeocodeNative = function(address, callback) {
 		// Process the AJAX RESTful response
 		var addressComponents = json.results[0].address_components;
 		var zipcode = null;
-		for (var i = 0; i < addressComponents.length; i++) {//try to get zip code
+		for (var i = 0; i < addressComponents.length; i++) { //try to get zip code
 			if (addressComponents[i].types == "postal_code")
 				zipcode = addressComponents[i].long_name;
 		}
@@ -158,7 +158,7 @@ var forwardGeocodeNative = function(address, callback) {
 		if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {
 			alert("You are a bit close, don\'t you think?");
 			callback(GeoInfo, WeatherInfo);
-		} else {// Get the latest weather info.
+		} else { // Get the latest weather info.
 			prevLat = lat;
 			prevLon = lon;
 			buildWeatherRequestByCoords(lat, lon, callback, 0);
