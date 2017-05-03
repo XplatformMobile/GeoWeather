@@ -37,7 +37,7 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
-// Open a browser window if you tap on the right (of what? -JJB)
+// Open a browser window if you click/tap on the weather icon (rightButton) in an annotation
 $.map.addEventListener('click', function(e) {
 	// If we are in an annotation and either title, infoWindow or subtitle was clicked
 	// then launch our web window  - Rightbutton weather icon for iOS
