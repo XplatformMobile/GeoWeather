@@ -25,15 +25,7 @@ dispatcher.on('textfield', function(e) {
 	});
 });
 
-
-
-
 $.pushpins.addEventListener('click', function(e) {
-	
+	// go to the list of locations table
 		Alloy.createController('locationsList').getView().open();
-			
-		
 });
-
-
-

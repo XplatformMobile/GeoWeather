@@ -18,14 +18,8 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 	};
 };
 
-
-/* Ti.App.addEventListener('moveto', function moveto(e) {
- * 	
- * 
- */
-
 dispatcher.on('moveto', function moveto(e) {
- 
+// Document what's going on here please!'
     $.map.setLocation({
 		latitude : e.latitude,
 		longitude :e.longitude,
@@ -33,10 +27,7 @@ dispatcher.on('moveto', function moveto(e) {
 		longitudeDelta : 1
 	});
 	
-	
 });
-
-
 
 // Registers a callback fn. that removes the annotation when user closes the annotation or
 // clicks the map outside the annotation
@@ -49,8 +40,8 @@ $.map.addEventListener('click', function(e) {
 // Open a browser window if you tap on the right (of what? -JJB)
 $.map.addEventListener('click', function(e) {
 	// If we are in an annotation and either title, infoWindow or subtitle was clicked
-	// launch or web window  - Rightbutton weather icon for iOS
-	alert (e);
+	// then launch our web window  - Rightbutton weather icon for iOS
+	// alert (e);	// used during debugging
 	
 	// iOS, needs rightButton event 
 	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
@@ -92,7 +83,7 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
-function reverseGeocodeAnnotation(coords, center) {
+function reverseGeocodeAnnotation(coords) {
   'use strict';				
 		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
     	if (!e.success || e.error) {
@@ -112,10 +103,10 @@ function reverseGeocodeAnnotation(coords, center) {
  });
 }
 
-function setupWeatherAnnotationWithoutCollection(title, coords, center) {
+function setupWeatherAnnotationWithoutCollection(title, coords) {
   'use strict';				
   
-         // still reverse to get the zip
+         // Call reverseGeocoder to get the zip
 		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {	
     	if (!e.success || e.error) {
       		return alert(e.error || 'Could not reverse geocode the position.');
@@ -127,12 +118,11 @@ function setupWeatherAnnotationWithoutCollection(title, coords, center) {
 		var lon = coords.longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
-	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
+	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata,weather) {    				
 		    exports.addAnnotationToMap(geodata, weather);
 	   });
  });
 }
-
 
 function firstAnnotation() {	
 	geo.forwardGeocode("MSOE", function(geodata, weather) {
@@ -142,7 +132,6 @@ function firstAnnotation() {
 		});
 	});
 }
-
 
 exports.addAnnotation = function (geodata, weather)
 {
@@ -179,17 +168,14 @@ exports.loadpins = function (e) {
     		
     	};
     	locname = loc.get('locationName');
-    	setupWeatherAnnotationWithoutCollection(locname,coords); 
+    	setupWeatherAnnotationWithoutCollection(locname, coords); 
     });
     
 };
 
-
-
-
 // Called when a new pushpin is added to the map
 exports.addAnnotationToMap = function(geodata, weather) {	
-	alert(geodata.title);	// echos location info to the user
+	// alert(geodata.title);	// echos location info to the user
 	// populate the annotation's model defined in the file annotation.js
 	if (weather != null || weather != undefined) {
 		var tempInfo = weather.weather.curren_weather[0].temp;
@@ -208,9 +194,9 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		longitude : geodata.coords.longitude,
 		rightButton : image_icon
 	});
+	
 	$.map.addAnnotation(annotation.getView());
 
-	
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
