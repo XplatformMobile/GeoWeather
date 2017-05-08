@@ -21,7 +21,7 @@
 
 "#header": {	// Red bar across top of app
 	top: Alloy.Globals.winTop,
-	height: "50dp",
+//	height: "50dp",
 	width: Ti.UI.FILL,
 	backgroundGradient: {
 		type: "linear",
@@ -58,7 +58,7 @@
 
 "TextField": {
     height: '40dp',
-    top: '0dp',
+    top: '5dp',
     left: '5dp',
     right: '100dp',
     style: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
