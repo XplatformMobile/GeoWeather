@@ -15,13 +15,13 @@ var prevLat = 37.389569;
 var prevLon = -122.050212;
 
 // populates json data object
-var GeoData = function(title, latitude, longitude, zip) {
+var GeoData = function(title, latitude, longitude, cityID) {
 	this.title = title;
 	this.coords = {
 		latitude : latitude,
 		longitude : longitude
 	};
-	this.zip = zip;
+	this.cityID = cityID;
 };
 
 /**
@@ -152,16 +152,48 @@ var forwardGeocodeNative = function(address, callback) {
 		// Think about querying http://wxdata.weather.com/wxdata/search/search?where=Los%20Angeles,
 		// parsing out the ID field and fetching http://www.weather.com/weather/today/l/USCA0638 in a WebView
 
-		// Populates GeoInfo with the location data collected from Google Maps
-		GeoInfo = new GeoData(address, lat, lon, zipcode);
-		// If the new weather location is near the last one, ignore it and send back old WeatherInfo
-		if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {
-			alert("You are a bit close, don\'t you think?");
-			callback(GeoInfo, WeatherInfo);
-		} else { // Get the latest weather info.
-			prevLat = lat;
-			prevLon = lon;
-			buildWeatherRequestByCoords(lat, lon, callback, 0);
+		var getWeather = function(){
+			// If the new weather location is near the last one, ignore it and send back old WeatherInfo
+			if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {
+				alert("You are a bit close, don\'t you think?");
+				callback(GeoInfo, WeatherInfo);
+			} else { // Get the latest weather info.
+				prevLat = lat;
+				prevLon = lon;
+				buildWeatherRequestByCoords(lat, lon, callback, 0);
+			}	
+		};
+		
+		var city_name = addressComponents[0].long_name;
+		getCityIDAndSetGeoData(city_name, lat, lon, getWeather);
+	};
+	// Something went wrong fetching location info. Bail out!
+	xhr.onerror = function(e) {
+		Ti.API.error(e.error);
+		alert(ERROR_MESSAGE);
+	};
+	// sends the AJAX RESTful web service request
+	xhr.send();
+};
+
+var getCityIDAndSetGeoData = function(location_name, lat, lon, callback){
+	var xhr = Titanium.Network.createHTTPClient();
+	var url = 'http://wxdata.weather.com/wxdata/search/search?where=' + location_name.replace(' ', '+');
+
+	xhr.open('GET', url);
+	xhr.onload = function() {
+		var doc = this.responseXML.documentElement;
+		var elements = doc.getElementsByTagName("loc");
+		
+		if( elements.length > 0 ){
+			var cityID = elements.item(0).getAttribute('id');
+		
+			// Populates GeoInfo with the location data collected from Google Maps
+			GeoInfo = new GeoData(location_name, lat, lon, cityID);
+			
+			callback();	
+		} else {
+			alert("Unable to get cityID [url: " + url +  "]");
 		}
 	};
 	// Something went wrong fetching location info. Bail out!

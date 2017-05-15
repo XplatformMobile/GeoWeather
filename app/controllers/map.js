@@ -56,10 +56,10 @@ $.map.addEventListener('click', function(e) {
 	    var longitude = e.annotation.getLongitude();
 	    var latitude = e.annotation.getLatitude();	   		
 
-		var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
-
-		var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
-
+		//var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
+		//var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
+		var weathergovURL = 'https://weather.com/weather/today/l/' + e.annotation.city_id;
+		
 		// debug:::: alert (weathergovURL);
 
 		var webview = Ti.UI.createWebView({
@@ -135,6 +135,7 @@ function firstAnnotation() {
 
 exports.addAnnotation = function (geodata, weather)
 {
+	//alert("add anotation line 140");
 	exports.addAnnotationToMap(geodata,weather);	
 	
 	var locations = Alloy.Collections.location;
@@ -144,6 +145,8 @@ exports.addAnnotation = function (geodata, weather)
 	    locationName : geodata.title,
         latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
+		longitude : geodata.coords.longitude,
+		city_id: geodata.cityID
 	});
 
 	// Add new model to the global collection
@@ -192,7 +195,8 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		subtitle : tempInfo,
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
-		rightButton : image_icon
+		rightButton : image_icon,
+		city_id: geodata.cityID
 	});
 	
 	$.map.addAnnotation(annotation.getView());
