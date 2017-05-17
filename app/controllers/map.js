@@ -134,8 +134,8 @@ function firstAnnotation() {
 }
 
 exports.addAnnotation = function (geodata, weather)
-{
-	//alert("add anotation line 140");
+{ // called from trigger in addAddress.js
+	//alert("add anotation line 138");
 	exports.addAnnotationToMap(geodata,weather);	
 	
 	var locations = Alloy.Collections.location;
@@ -154,8 +154,6 @@ exports.addAnnotation = function (geodata, weather)
 
 	// Save the model to persistent storage
 	address.save();
-
-	// TODO: Create a way to add item to the main page
 
 	// Reload the locations
 	locations.fetch();
@@ -199,8 +197,8 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		city_id: geodata.cityID
 	});
 	
-	$.map.addAnnotation(annotation.getView());
-
+	$.map.addAnnotation(annotation.getView());	// calls into ti.map.MapView.addAnnotation()
+												// and NOT into exports.addAnnotation() above!
 	$.map.setLocation({
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
