@@ -97,7 +97,7 @@ function reverseGeocodeAnnotation(coords) {
 		var lon = e.places[0].longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
-	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata,weather) {    				
+	    geo.setupWeatherBuild(address,lat,lon,zipcode, function(geodata, weather) {    				
 		    exports.addAnnotation(geodata, weather);
 	   });
  });
@@ -118,12 +118,12 @@ function setupWeatherAnnotationWithoutCollection(title, coords) {
 		var lon = coords.longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
-	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata,weather) {    				
+	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata, weather) {    				
 		    exports.addAnnotationToMap(geodata, weather);
 	   });
  });
 }
-
+/*
 function firstAnnotation() {	
 	geo.forwardGeocode("MSOE", function(geodata, weather) {
 		$.trigger('addAnnotation', {
@@ -132,11 +132,11 @@ function firstAnnotation() {
 		});
 	});
 }
-
+*/
 exports.addAnnotation = function (geodata, weather)
 { // called from trigger in addAddress.js
 	//alert("add anotation line 138");
-	exports.addAnnotationToMap(geodata,weather);	
+	exports.addAnnotationToMap(geodata, weather);	
 	
 	var locations = Alloy.Collections.location;
 	locations.fetch();	
@@ -206,25 +206,6 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		longitudeDelta : 1
 	});
 };
-
-/*
-// Was this the original addAnnotation fn from GeoCoder?  -JJB
-exports.addAnnotation = function(geodata) {
-	var annotation = Alloy.createController('annotation', {
-		title : geodata.title,
-		subtitle : geodata.zip,
-		latitude : geodata.coords.latitude,
-		longitude : geodata.coords.longitude
-	});
-	$.map.addAnnotation(annotation.getView());
-	$.map.setLocation({
-		latitude : geodata.coords.latitude,
-		longitude : geodata.coords.longitude,
-		latitudeDelta : 1,
-		longitudeDelta : 1
-	});
-}; 
-*/
 
 /**Method that will get the weather information and the day Icon. If possible, see if it is day or night as the icon can
  be chosen by the field[3](day) or field[4](night). The night icon didn't look very useful, so the day icon was chosen.

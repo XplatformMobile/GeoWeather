@@ -25,46 +25,6 @@ var GeoData = function(title, latitude, longitude, cityID) {
 };
 
 /**
- * !!!!!!!DEPRECATED!!!!!!!! - We now use the buildWeatherRequestByCoords() fn.
- * Delays the callback function, creates a weather JS Object that contains all relevant information about current weather.
- * @param {Object} zip - the U.S. zip code or postal code
- * @param {Object} callback	- a fn. argument that is called when WeatherInfo is populated from the response
- * @param {Object} iteration - set always to 0. Internal handling.
- */
-var buildWeatherRequestByZip = function(zip, callback, iteration) {
-	var uac = IDs[iteration];
-	// Query Example:
-	// http://www.myweather2.com/developer/forecast.ashx?uac=uIOWy9SFuf&output=json&query=53151&temp_unit=f&ws_unit=mph
-	var request = "http://www.myweather2.com/developer/forecast.ashx?uac=" + uac + "&output=json&query=" + zip + "&temp_unit=f&ws_unit=mph";
-	// JSON Response example:
-	//{ "weather": { "curren_weather": [ {"humidity": "58", "pressure": "1032", "temp": "11", "temp_unit": "c", "weather_code": "1", "weather_text": "Partly cloudy",  "wind": [ {"dir": "E", "speed": "3", "wind_unit": "kph" } ] } ],  "forecast": [ {"date": "2015-04-20",  "day": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "73", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "17",  "night": [ {"weather_code": "0", "weather_text": "Clear skies",  "wind": [ {"dir": "ENE", "dir_degree": "68", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "4", "temp_unit": "c" }, {"date": "2015-04-21",  "day": [ {"weather_code": "2", "weather_text": "Cloudy skies",  "wind": [ {"dir": "ENE", "dir_degree": "57", "speed": "22", "wind_unit": "kph" } ] } ], "day_max_temp": "16",  "night": [ {"weather_code": "3", "weather_text": "Overcast skies",  "wind": [ {"dir": "ENE", "dir_degree": "66", "speed": "22", "wind_unit": "kph" } ] } ], "night_min_temp": "5", "temp_unit": "c" } ] }}
-	var xhr = Titanium.Network.createHTTPClient();
-	xhr.open('GET', request);
-	var json;
-	// Holds the data returned from this fn.
-	// onload is called on a successful AJAX query; 'this' is the response obj.
-	xhr.onload = function() {
-		var text = this.responseText;
-		json = JSON.parse(text);
-		WeatherInfo = json;
-		callback(GeoInfo, WeatherInfo);
-	};
-	// We might have run out of daily quota. Try another uac code to get another helping
-	xhr.onerror = function(e) {
-		if (iteration < IDs.length) {
-			buildWeatherRequestByCoords(lat, lon, callback, iteration + 1);
-			return;
-		} else {
-			Ti.API.error(e.error);
-			alert(ERROR_MESSAGE);
-		}
-	};
-	// Sends the AJAX RESTful web service request
-	xhr.send();
-	//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
-};
-
-/**
  * Delays the callback function, creates a weather JS Object that contains all relevant information about current weather.
  * @param {Object} lattitude \
  * @param {Object} longitude / Replaced zip by GPS coordinates (latitude, longitude)
