@@ -27,9 +27,9 @@ var GeoData = function(title, latitude, longitude, cityID) {
 /**
  * Delays the callback function, creates a weather JS Object that contains all relevant information about current weather.
  * @param {Object} lattitude \
- * @param {Object} longitude / Replaced zip by GPS coordinates (latitude, longitude)
- * @param {Object} callback - a fn. argument that is called when WeatherInfo is populated from the response
- * @param {Object} iteration - set always to 0. Internal handling.
+ * @param {Object} longitude / Replaced zip by GPS coordinates (latitude, longitude).
+ * @param {Object} callback - a fn. argument that is called when WeatherInfo is populated from the response.
+ * @param {Object} iteration - Set to 0. Used internally when quota is exhausted to call itself recursively.
  */
 var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 	var uac = IDs[iteration];
@@ -64,13 +64,17 @@ var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 	//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
 };
 
+// Make the following methods an entry point into this component
+/*
 exports.setupWeatherBuild = function(address, lat, lon, zipcode, callback) {
-	GeoInfo = new GeoData(address, lat, lon, zipcode);
-	buildWeatherRequestByCoords(lat, lon, callback, 0);
+	// Use this entry point when address (i.e. location) is fully known.
+//	GeoInfo = new GeoData(address, lat, lon, zipcode);		// Replaced these 2 lines with call
+//	buildWeatherRequestByCoords(lat, lon, callback, 0);		// to method that gets City ID from loc.
+	getCityIDAndSetGeoData(address, lat, lon, callback);
 };
-
-// Make the following method the entry point into this library
+*/
 exports.forwardGeocode = function(address, callback) {
+	// Use this entry point when only address (i.e. location) is known.
 	if (Ti.Platform.osname === 'mobileweb') {
 		forwardGeocodeWeb(address, callback);
 	} else {
@@ -103,16 +107,14 @@ var forwardGeocodeNative = function(address, callback) {
 			if (addressComponents[i].types == "postal_code")
 				zipcode = addressComponents[i].long_name;
 		}
-		// alert(address);
-		// alert(zipcode);
 		address = json.results[0].formatted_address;
 		var lat = json.results[0].geometry.location.lat;
 		var lon = json.results[0].geometry.location.lng;
-		// Think about fetching location name f.e. Los Angeles (which has city ID USCA0638)
-		// Think about querying http://wxdata.weather.com/wxdata/search/search?where=Los%20Angeles,
-		// parsing out the ID field and fetching http://www.weather.com/weather/today/l/USCA0638 in a WebView
+		// The rest of onload() gets location name (f.e. Los Angeles which has city ID USCA0638)
+		// and querys 'https://weather.com/weather/today/l/ + city ID' in map.js around line 60
+		// and parses out the ID field to request a weather page in a WebView (ie. window)
 
-		var getWeather = function(){
+		var getWeather = function() {	// This is a callback fn used below.
 			// If the new weather location is near the last one, ignore it and send back old WeatherInfo
 			if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {
 				alert("You are a bit close, don\'t you think?");
@@ -126,7 +128,7 @@ var forwardGeocodeNative = function(address, callback) {
 		
 		var city_name = addressComponents[0].long_name;
 		getCityIDAndSetGeoData(city_name, lat, lon, getWeather);
-	};
+	};	// end onload() fn.
 	// Something went wrong fetching location info. Bail out!
 	xhr.onerror = function(e) {
 		Ti.API.error(e.error);
@@ -136,7 +138,7 @@ var forwardGeocodeNative = function(address, callback) {
 	xhr.send();
 };
 
-var getCityIDAndSetGeoData = function(location_name, lat, lon, callback){
+var getCityIDAndSetGeoData = function(location_name, lat, lon, callback) {
 	var xhr = Titanium.Network.createHTTPClient();
 	var url = 'http://wxdata.weather.com/wxdata/search/search?where=' + location_name.replace(' ', '+');
 
@@ -147,15 +149,13 @@ var getCityIDAndSetGeoData = function(location_name, lat, lon, callback){
 		
 		if( elements.length > 0 ){
 			var cityID = elements.item(0).getAttribute('id');
-		
 			// Populates GeoInfo with the location data collected from Google Maps
 			GeoInfo = new GeoData(location_name, lat, lon, cityID);
-			
-			callback();	
+			callback();
 		} else {
 			alert("Unable to get cityID [url: " + url +  "]");
 		}
-	};
+	};	// end onload() fn.
 	// Something went wrong fetching location info. Bail out!
 	xhr.onerror = function(e) {
 		Ti.API.error(e.error);
