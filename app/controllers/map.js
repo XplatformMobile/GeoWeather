@@ -145,13 +145,15 @@ exports.addAnnotation = function(geodata, weather)
 exports.loadpins = function(e) {
 	var locations = Alloy.Collections.location;
     locations.fetch();
-    locations.each ( function(loc) {
+    locations.each( function(loc) {
     	var coords = {
     		"latitude": loc.get('latitude'),
     		"longitude": loc.get('longitude')
     	};
     	locname = loc.get('locationName');
-    	setupWeatherAnnotation(locname, coords); 
+    	setupWeatherAnnotation(locname, coords);
+    	// maybe a delay fn will help load all pins from DB -JJB
+//		setTimeout(function(){ /* wait loop*/ }, 1000);	// time is in milliseconds
     });
 };
 
