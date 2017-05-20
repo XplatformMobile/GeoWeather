@@ -18,7 +18,7 @@ var calculateLatLngfromPixels = function(mapview, xPixels, yPixels) {
 };
 
 dispatcher.on('moveto', function moveto(e) {
-// Document what's going on here please!'
+// Document what's going on here please!
     $.map.setLocation({
 		latitude : e.latitude,
 		longitude :e.longitude,
@@ -91,7 +91,7 @@ function reverseGeocodeAnnotation(coords) {	// called on a longclick event (see 
 		var lon = e.places[0].longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
-	    geo.forwardGeocode(address, function(geodata, weather) {	// previously called setupWeatherBuild()
+	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
 		    exports.addAnnotation(geodata, weather);
 	   });
  });
@@ -110,13 +110,13 @@ function setupWeatherAnnotation(title, coords) { // called to setup pins from DB
 		var lon = coords.longitude;
 		var zipcode = e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
-	    geo.forwardGeocode(address, function(geodata, weather) {	// previously called setupWeatherBuild()
+	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
 		    exports.addAnnotationToMap(geodata, weather);
 	   });
  });
 }
 
-exports.addAnnotation = function (geodata, weather)
+exports.addAnnotation = function(geodata, weather)
 { // called from trigger in addAddress.js
 	//alert("add anotation line 138");
 	exports.addAnnotationToMap(geodata, weather);	
@@ -142,10 +142,10 @@ exports.addAnnotation = function (geodata, weather)
 	locations.fetch();
 };
 
-exports.loadpins = function (e) {
+exports.loadpins = function(e) {
 	var locations = Alloy.Collections.location;
     locations.fetch();
-    locations.each ( function (loc) {
+    locations.each ( function(loc) {
     	var coords = {
     		"latitude": loc.get('latitude'),
     		"longitude": loc.get('longitude')

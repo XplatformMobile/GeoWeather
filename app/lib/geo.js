@@ -64,15 +64,15 @@ var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 	//	return json; // returned object isn't being used! WeatherInfo holds it & was passed to callback fn.
 };
 
-// Make the following methods an entry point into this component
-/*
+// Make the following methods entry points into this component (via exports. keyword)
+
 exports.setupWeatherBuild = function(address, lat, lon, zipcode, callback) {
 	// Use this entry point when address (i.e. location) is fully known.
-//	GeoInfo = new GeoData(address, lat, lon, zipcode);		// Replaced these 2 lines with call
-//	buildWeatherRequestByCoords(lat, lon, callback, 0);		// to method that gets City ID from loc.
-	getCityIDAndSetGeoData(address, lat, lon, callback);
+	GeoInfo = new GeoData(address, lat, lon, zipcode);
+	buildWeatherRequestByCoords(lat, lon, callback, 0);
+//	getCityIDAndSetGeoData(address, lat, lon, callback);	// tried to call this instead but URL can't take City ID
 };
-*/
+
 exports.forwardGeocode = function(address, callback) {
 	// Use this entry point when only address (i.e. location) is known.
 	if (Ti.Platform.osname === 'mobileweb') {
