@@ -118,8 +118,8 @@ function setupWeatherAnnotation(title, coords) { // called to setup pins from DB
 
 exports.addAnnotation = function(geodata, weather)
 { // called from trigger in addAddress.js
-	//alert("add anotation line 138");
-	exports.addAnnotationToMap(geodata, weather);	
+	//alert("in exports.addAnotation");
+	exports.addAnnotationToMap(geodata, weather);
 	
 	var locations = Alloy.Collections.location;
 	locations.fetch();	
@@ -128,8 +128,7 @@ exports.addAnnotation = function(geodata, weather)
 	    locationName : geodata.title,
         latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
-		longitude : geodata.coords.longitude,
-		city_id: geodata.cityID
+		city_id: geodata.cityID	// should value be city_id? -JJB
 	});
 
 	// Add new model to the global collection
@@ -150,7 +149,8 @@ exports.loadpins = function(e) {
     		"latitude": loc.get('latitude'),
     		"longitude": loc.get('longitude')
     	};
-    	locname = loc.get('locationName');
+    	var locname = loc.get('locationName');
+// maybe I should get City ID from the DB?
     	setupWeatherAnnotation(locname, coords);
     	// maybe a delay fn will help load all pins from DB -JJB
 //		setTimeout(function(){ /* wait loop*/ }, 1000);	// time is in milliseconds
@@ -177,7 +177,7 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
 		rightButton : image_icon,
-		city_id: geodata.cityID
+		city_id: geodata.cityID	// should value be city_id? -JJB
 	});
 	
 	$.map.addAnnotation(annotation.getView());	// calls into ti.map.MapView.addAnnotation()

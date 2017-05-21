@@ -1,5 +1,5 @@
 <Alloy>
-	<Module id="map" module="ti.map" onlongclick="reverseGeocodeAnnotation"  method="createView" platform="ios,android" />
+	<Module id="map" module="ti.map" onlongclick="reverseGeocodeAnnotation"  method="createView" platform="ios, android" />
 	<View id="map" ns="ti.map" method="createView" platform="mobileweb">
 		<Require src="annotation" title="Appcelerator" />
 	</View>
