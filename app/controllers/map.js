@@ -79,7 +79,8 @@ $.map.addEventListener('click', function(e) {
 });
 
 function reverseGeocodeAnnotation(coords) {	// called on a longclick event (see map.xml)
-  'use strict';				
+//  'use strict';
+  	alert("In Rev. Geocoder");	// Why don't I hit this alert when I long click?!
 		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {
     	if (!e.success || e.error) {
       		return alert(e.error || 'Could not reverse geocode the position.');
@@ -99,8 +100,8 @@ function reverseGeocodeAnnotation(coords) {	// called on a longclick event (see 
 }
 
 function setupWeatherAnnotation(title, coords) { // called to setup pins from DB (see below)
-  'use strict';
-         // Call reverseGeocoder to get the zip
+//  'use strict';
+         // Call reverseGeocoder to get the zip, *** Redo this method, zipcodes no longer used in XHR calls
 		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {
     	if (!e.success || e.error) {
       		return alert(e.error || 'Could not reverse geocode the position.');

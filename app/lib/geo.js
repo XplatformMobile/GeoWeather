@@ -110,9 +110,6 @@ var forwardGeocodeNative = function(address, callback) {
 		address = json.results[0].formatted_address;
 		var lat = json.results[0].geometry.location.lat;
 		var lon = json.results[0].geometry.location.lng;
-		// The rest of onload() gets location name (f.e. Los Angeles which has city ID USCA0638)
-		// and querys 'https://weather.com/weather/today/l/ + city ID' in map.js around line 60
-		// and parses out the ID field to request a weather page in a WebView (ie. window)
 
 		var getWeather = function() {	// This is a callback fn used below.
 			// If the new weather location is near the last one, ignore it and send back old WeatherInfo
@@ -127,7 +124,7 @@ var forwardGeocodeNative = function(address, callback) {
 		};
 		
 		var city_name = addressComponents[0].long_name;
-		// TODO: In order to save a one url request, we can use the weather data from the mashape api.
+		// In order to save one request, we can use the weather data from the mashape api.
 		getWeatherURLAndSetGeoData(city_name, lat, lon, getWeather);
 	};	// end onload() fn.
 	// Something went wrong fetching location info. Bail out!
@@ -142,7 +139,7 @@ var forwardGeocodeNative = function(address, callback) {
 var getWeatherURLAndSetGeoData = function(location_name, lat, lon, callback) {
 	var xhr = Titanium.Network.createHTTPClient();
 	//var url = 'http://wxdata.weather.com/wxdata/search/search?where=' + location_name.replace(' ', '+');
-
+	// Instead, use the Mashape site per Lucas Turcan's suggestion (he set up an app for us to use)
 	var url = 'https://simple-weather.p.mashape.com/weatherdata?lat=' + lat + '&lng=' + lon;
 	xhr.open('GET', url);
 	xhr.setRequestHeader('X-Mashape-Key', 'TOknjtGzdemshrzgusLGkS3AeiMqp1wfg0GjsnFEjsB1iuGO11');
@@ -156,7 +153,7 @@ var getWeatherURLAndSetGeoData = function(location_name, lat, lon, callback) {
 		
 		// TODO: Add try catch
 
-		// if there are two links concatenated by *, get he the second one
+		// if there are two links concatenated by *, get the second one
 		var link = json.query.results.channel.item.link;
 		link = link.split('*');
 		link = link[ link.length - 1 ];
