@@ -40,24 +40,25 @@ $.map.addEventListener('click', function(e) {
 	// If we are in an annotation and either title, infoWindow or subtitle was clicked
 	// then launch our web window  - Rightbutton weather icon is for iOS.
 	// iOS, needs rightButton event (should try {height} etc.)
-	if (e.annotation && (e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
-		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle') ) {
+	if (e.annotation && ((e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
+		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle'))) {
 
 		// access previously set globals.
 	    // var longitude = Ti.App.currentLon;
 	    // var latitude = Ti.App.currentLat;
 	    
-	    var longitude = e.annotation.getLongitude();
-	    var latitude = e.annotation.getLatitude();
+	    // var longitude = e.annotation.longitude;
+	    // var latitude = e.annotation.latitude;
 
 		//var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
 		//var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
-		var weatherdotcomURL = 'https://weather.com/weather/today/l/' + e.annotation.city_id;
+		//var weatherdotcomURL = 'https://weather.com/weather/today/l/' + e.annotation.city_id;
+		var yahooweatherURL = e.annotation.weather_url;
 		
 		// debug:::: alert (weathergovURL);
 		var webwin = Ti.UI.createWindow();
 		var webview = Ti.UI.createWebView({
-			url : weatherdotcomURL
+			url : yahooweatherURL
 		});
 	
 		webwin.open();
@@ -128,7 +129,7 @@ exports.addAnnotation = function(geodata, weather)
 	    locationName : geodata.title,
         latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
-		city_id: geodata.cityID	// should value be city_id? -JJB
+		weather_url: geodata.weather_url	// should value be city_id? -JJB
 	});
 
 	// Add new model to the global collection
@@ -177,7 +178,7 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
 		rightButton : image_icon,
-		city_id: geodata.cityID	// should value be city_id? -JJB
+		weather_url: geodata.weather_url	// should value be city_id? -JJB
 	});
 	
 	$.map.addAnnotation(annotation.getView());	// calls into ti.map.MapView.addAnnotation()

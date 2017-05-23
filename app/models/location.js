@@ -7,7 +7,7 @@ exports.definition = {
 			"temperature" : "string",
 			"units" : "string",
 			"description" : "string",
-			"city_id" : "string"	// this was added by JJB
+			"weather_url" : "string"	// this was added by JJB
 		},
 		adapter : {
 			type : "sql",

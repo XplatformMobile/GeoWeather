@@ -15,13 +15,13 @@ var prevLat = 37.389569;
 var prevLon = -122.050212;
 
 // populates json data object
-var GeoData = function(title, latitude, longitude, cityID) {
+var GeoData = function(title, latitude, longitude, weather_url) {
 	this.title = title;
 	this.coords = {
 		latitude : latitude,
 		longitude : longitude
 	};
-	this.cityID = cityID;
+	this.weather_url = weather_url;
 };
 
 /**
@@ -127,7 +127,8 @@ var forwardGeocodeNative = function(address, callback) {
 		};
 		
 		var city_name = addressComponents[0].long_name;
-		getCityIDAndSetGeoData(city_name, lat, lon, getWeather);
+		// TODO: In order to save a one url request, we can use the weather data from the mashape api.
+		getWeatherURLAndSetGeoData(city_name, lat, lon, getWeather);
 	};	// end onload() fn.
 	// Something went wrong fetching location info. Bail out!
 	xhr.onerror = function(e) {
@@ -138,23 +139,31 @@ var forwardGeocodeNative = function(address, callback) {
 	xhr.send();
 };
 
-var getCityIDAndSetGeoData = function(location_name, lat, lon, callback) {
+var getWeatherURLAndSetGeoData = function(location_name, lat, lon, callback) {
 	var xhr = Titanium.Network.createHTTPClient();
-	var url = 'http://wxdata.weather.com/wxdata/search/search?where=' + location_name.replace(' ', '+');
+	//var url = 'http://wxdata.weather.com/wxdata/search/search?where=' + location_name.replace(' ', '+');
 
+	var url = 'https://simple-weather.p.mashape.com/weatherdata?lat=' + lat + '&lng=' + lon;
 	xhr.open('GET', url);
+	xhr.setRequestHeader('X-Mashape-Key', 'TOknjtGzdemshrzgusLGkS3AeiMqp1wfg0GjsnFEjsB1iuGO11');
+	xhr.setRequestHeader('Accept', 'application/json');
 	xhr.onload = function() {
-		var doc = this.responseXML.documentElement;
-		var elements = doc.getElementsByTagName("loc");
-		
-		if( elements.length > 0 ){
-			var cityID = elements.item(0).getAttribute('id');
-			// Populates GeoInfo with the location data collected from Google Maps
-			GeoInfo = new GeoData(location_name, lat, lon, cityID);
-			callback();
-		} else {
-			alert("Unable to get cityID [url: " + url +  "]");
+		var json = JSON.parse(this.responseText);
+		if (!json) {
+			alert('An invalid response from the simple-weather API!');
+			return;
 		}
+		
+		// TODO: Add try catch
+
+		// if there are two links concatenated by *, get he the second one
+		var link = json.query.results.channel.item.link;
+		link = link.split('*');
+		link = link[ link.length - 1 ];
+
+		// Populates GeoInfo with the location data collected from Google Maps
+		GeoInfo = new GeoData(location_name, lat, lon, link);
+		callback();
 	};	// end onload() fn.
 	// Something went wrong fetching location info. Bail out!
 	xhr.onerror = function(e) {
