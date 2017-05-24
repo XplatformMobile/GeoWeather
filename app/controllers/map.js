@@ -91,15 +91,15 @@ function reverseGeocodeAnnotation(coords) {	// called on a longclick event (see 
     	address = address.replace("United States of America","USA");
 		var lat = e.places[0].latitude;
 		var lon = e.places[0].longitude;
-		var zipcode = e.places[0].zipcode;
+		var weatherURL = e.annotation ? e.annotation.weather_url : null;	// previous value was e.places[0].zipcode;
 		// need explicit call to exports.addAnnotation because of its function name
-	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
+	    geo.setupWeatherBuild(address, lat, lon, weatherURL, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
 		    exports.addAnnotation(geodata, weather);
 	   });
  });
 }
 
-function setupWeatherAnnotation(title, coords) { // called to setup pins from DB (see below)
+function setupWeatherAnnotation(title, coords, weatherURL) { // called to setup pins from DB (see below)
 //  'use strict';
          // Call reverseGeocoder to get the zip, *** Redo this method, zipcodes no longer used in XHR calls
 		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {
@@ -110,9 +110,9 @@ function setupWeatherAnnotation(title, coords) { // called to setup pins from DB
     	var address = title;
 		var lat = coords.latitude;
 		var lon = coords.longitude;
-		var zipcode = e.places[0].zipcode;
-		// need explicit call to exports.addAnnotation because of its function name
-	    geo.setupWeatherBuild(address, lat, lon, zipcode, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
+//		var weatherURL = e.annotation ? e.annotation.weather_url : null;	// previous value was e.places[0].zipcode;
+		// need explicit call to exports.addAnnotationToMap because of its function name
+	    geo.setupWeatherBuild(address, lat, lon, weatherURL, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
 		    exports.addAnnotationToMap(geodata, weather);
 	   });
  });
@@ -120,7 +120,6 @@ function setupWeatherAnnotation(title, coords) { // called to setup pins from DB
 
 exports.addAnnotation = function(geodata, weather)
 { // called from trigger in addAddress.js
-	//alert("in exports.addAnotation");
 	exports.addAnnotationToMap(geodata, weather);
 	
 	var locations = Alloy.Collections.location;
@@ -130,7 +129,7 @@ exports.addAnnotation = function(geodata, weather)
 	    locationName : geodata.title,
         latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
-		weather_url: geodata.weather_url	// should value be city_id? -JJB
+		weather_url: geodata.weather_url
 	});
 
 	// Add new model to the global collection
@@ -152,8 +151,8 @@ exports.loadpins = function(e) {
     		"longitude": loc.get('longitude')
     	};
     	var locname = loc.get('locationName');
-// maybe I should get City ID from the DB?
-    	setupWeatherAnnotation(locname, coords);
+    	var weatherURL = loc.get('weather_url');
+    	setupWeatherAnnotation(locname, coords, weatherURL);
     	// maybe a delay fn will help load all pins from DB -JJB
 //		setTimeout(function(){ /* wait loop*/ }, 1000);	// time is in milliseconds
     });
@@ -179,7 +178,7 @@ exports.addAnnotationToMap = function(geodata, weather) {
 		latitude : geodata.coords.latitude,
 		longitude : geodata.coords.longitude,
 		rightButton : image_icon,
-		weather_url: geodata.weather_url	// should value be city_id? -JJB
+		weather_url: geodata.weather_url
 	});
 	
 	$.map.addAnnotation(annotation.getView());	// calls into ti.map.MapView.addAnnotation()

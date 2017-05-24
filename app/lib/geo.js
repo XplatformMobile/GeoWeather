@@ -66,9 +66,9 @@ var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 
 // Make the following methods entry points into this component (via exports. keyword)
 
-exports.setupWeatherBuild = function(address, lat, lon, zipcode, callback) {
+exports.setupWeatherBuild = function(address, lat, lon, weather_url, callback) {
 	// Use this entry point when address (i.e. location) is fully known.
-	GeoInfo = new GeoData(address, lat, lon, zipcode);
+	GeoInfo = new GeoData(address, lat, lon, weather_url);
 	buildWeatherRequestByCoords(lat, lon, callback, 0);
 //	getCityIDAndSetGeoData(address, lat, lon, callback);	// tried to call this instead but URL can't take City ID
 };
@@ -102,11 +102,11 @@ var forwardGeocodeNative = function(address, callback) {
 		}
 		// Process the AJAX RESTful response
 		var addressComponents = json.results[0].address_components;
-		var zipcode = null;
-		for (var i = 0; i < addressComponents.length; i++) { //try to get zip code
-			if (addressComponents[i].types == "postal_code")
-				zipcode = addressComponents[i].long_name;
-		}
+//		var zipcode = null;
+//		for (var i = 0; i < addressComponents.length; i++) { //try to get zip code
+//			if (addressComponents[i].types == "postal_code")
+//				zipcode = addressComponents[i].long_name;
+//		}
 		address = json.results[0].formatted_address;
 		var lat = json.results[0].geometry.location.lat;
 		var lon = json.results[0].geometry.location.lng;
