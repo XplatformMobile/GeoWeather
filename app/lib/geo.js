@@ -67,7 +67,7 @@ var buildWeatherRequestByCoords = function(lat, lon, callback, iteration) {
 // Make the following methods entry points into this component (via exports. keyword)
 
 exports.setupWeatherBuild = function(address, lat, lon, weather_url, callback) {
-	// Use this entry point when address (i.e. location) is fully known.
+	// Use this entry point when address and location are known. Short-circuits Lucas Turcan's alternate method
 	GeoInfo = new GeoData(address, lat, lon, weather_url);
 	buildWeatherRequestByCoords(lat, lon, callback, 0);
 //	getCityIDAndSetGeoData(address, lat, lon, callback);	// tried to call this instead but URL can't take City ID
@@ -102,16 +102,11 @@ var forwardGeocodeNative = function(address, callback) {
 		}
 		// Process the AJAX RESTful response
 		var addressComponents = json.results[0].address_components;
-//		var zipcode = null;
-//		for (var i = 0; i < addressComponents.length; i++) { //try to get zip code
-//			if (addressComponents[i].types == "postal_code")
-//				zipcode = addressComponents[i].long_name;
-//		}
 		address = json.results[0].formatted_address;
 		var lat = json.results[0].geometry.location.lat;
 		var lon = json.results[0].geometry.location.lng;
 
-		var getWeather = function() {	// This is a callback fn used below.
+		var getWeather = function() {	// This is a callback fn used below in Lucas Turcan's method.
 			// If the new weather location is near the last one, ignore it and send back old WeatherInfo
 			if (Math.abs(lat - prevLat) < margin && Math.abs(lon - prevLon) < margin && WeatherInfo != null) {
 				alert("You are a bit close, don\'t you think?");
@@ -136,7 +131,7 @@ var forwardGeocodeNative = function(address, callback) {
 	xhr.send();
 };
 
-var getWeatherURLAndSetGeoData = function(location_name, lat, lon, callback) {
+var getWeatherURLAndSetGeoData = function(location_name, lat, lon, callback) { // Lucas Turcan's method
 	var xhr = Titanium.Network.createHTTPClient();
 	//var url = 'http://wxdata.weather.com/wxdata/search/search?where=' + location_name.replace(' ', '+');
 	// Instead, use the Mashape site per Lucas Turcan's suggestion (he set up an app for us to use)

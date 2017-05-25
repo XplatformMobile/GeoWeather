@@ -43,22 +43,21 @@ $.map.addEventListener('click', function(e) {
 	if (e.annotation && ((e.clicksource == 'title') || (e.cliksource == 'rightPane') || (e.clicksource == 'rightButton' )
 		|| (e.clicksource == 'infoWindow' ) || (e.clicksource == 'subtitle'))) {
 
-		// access previously set globals.
+		// Either access previously set globals...
 	    // var longitude = Ti.App.currentLon;
 	    // var latitude = Ti.App.currentLat;
-	    
+	    // Or, get coordinates from the annotation.
 	    // var longitude = e.annotation.longitude;
 	    // var latitude = e.annotation.latitude;
-
-		//var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
-		//var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
-		//var weatherdotcomURL = 'https://weather.com/weather/today/l/' + e.annotation.city_id;
-		var yahooweatherURL = e.annotation.weather_url;
+		// alert("In rightButton callback" + e.annotation.weather_url);		// used for debugging
+		// var weathergovbaseURL = 'http://forecast.weather.gov/MapClick.php?';
+		// var weathergovURL = weathergovbaseURL + "lat=" + latitude + "&lon=" + longitude;
+		// var weatherdotcomURL = 'https://weather.com/weather/today/l/' + e.annotation.city_id;
+		var yahooWeatherURL = e.annotation.weather_url;
 		
-		// debug:::: alert (weathergovURL);
 		var webwin = Ti.UI.createWindow();
 		var webview = Ti.UI.createWebView({
-			url : yahooweatherURL
+			url : yahooWeatherURL
 		});
 	
 		webwin.open();
@@ -78,44 +77,28 @@ $.map.addEventListener('click', function(e) {
 	}
 });
 
-function reverseGeocodeAnnotation(coords) {	// called on a longclick event (see map.xml)
+function reverseGeocodeAnnotation(coords) {	// called on a Longclick event (see map.xml)
 //  'use strict';
-  	alert("In Rev. Geocoder");	// Why don't I hit this alert when I long click?!
-		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {
-    	if (!e.success || e.error) {
-      		return alert(e.error || 'Could not reverse geocode the position.');
-    	}
-    	// Use the address of the first place found for the title
-    	// location.title = e.places[0].address;
-    	var address = e.places[0].address;
-    	address = address.replace("United States of America","USA");
-		var lat = e.places[0].latitude;
-		var lon = e.places[0].longitude;
-		var weatherURL = e.annotation ? e.annotation.weather_url : null;	// previous value was e.places[0].zipcode;
-		// need explicit call to exports.addAnnotation because of its function name
-	    geo.setupWeatherBuild(address, lat, lon, weatherURL, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
+	Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {
+		if (!e.success || e.error) {
+	  		return alert(e.error || 'Could not reverse geocode the position.');
+		}
+		// Use the address of the first place found for the title
+		var address = e.places[0].address;
+		address = address.replace("United States of America","USA");
+		// set new address in DB and drop a pushpin on the map
+		geo.forwardGeocode(address, function(geodata, weather) {
 		    exports.addAnnotation(geodata, weather);
-	   });
- });
+		});
+	});
 }
 
 function setupWeatherAnnotation(title, coords, weatherURL) { // called to setup pins from DB (see below)
 //  'use strict';
-         // Call reverseGeocoder to get the zip, *** Redo this method, zipcodes no longer used in XHR calls
-		Ti.Geolocation.reverseGeocoder(coords.latitude, coords.longitude, function(e) {
-    	if (!e.success || e.error) {
-      		return alert(e.error || 'Could not reverse geocode the position.');
-    	}
-    	// Use the title as the address
-    	var address = title;
-		var lat = coords.latitude;
-		var lon = coords.longitude;
-//		var weatherURL = e.annotation ? e.annotation.weather_url : null;	// previous value was e.places[0].zipcode;
-		// need explicit call to exports.addAnnotationToMap because of its function name
-	    geo.setupWeatherBuild(address, lat, lon, weatherURL, function(geodata, weather) { // tried to call forwardGeocode() but URL can't take City ID
-		    exports.addAnnotationToMap(geodata, weather);
-	   });
- });
+	// need explicit call to exports.addAnnotationToMap because of its function name
+    geo.setupWeatherBuild(title, coords.latitude, coords.longitude, weatherURL, function(geodata, weather) {
+	    exports.addAnnotationToMap(geodata, weather);
+   });
 }
 
 exports.addAnnotation = function(geodata, weather)
